@@ -75,18 +75,23 @@ function loginUser(dispatch, login, password, history, setIsLoading, setError) {
     // ログイン処理
     axiosCookieJarSupport(axios);
     let cookieJar = new tough.CookieJar();
+    var params = new URLSearchParams();
+    params.append('mailAddress', login);
+    params.append('password', password);
     axios
-      .post('http://localhost:8080/api/auth',
-        {
-          mailAddress: 'admin@localhost',
-          password: 'secret'
-        },
+      .post('http://localhost:8080/perform_login',
+              params,
+//        {
+//          mailAddress: 'admin@localhost',
+//          password: 'secret'
+//        },
         {
           jar: cookieJar,
           withCredentials: true,
         }
       )
       .then((response) => {
+        // TODO responseのステータスコード辺りでエラー判定する処理とかが必要そう
         const config = response.config;
         console.log("認証のレスポンス：" + JSON.stringify(config.jar.toJSON()));
         localStorage.setItem('id_token', 1)

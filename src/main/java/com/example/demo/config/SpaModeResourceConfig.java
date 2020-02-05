@@ -5,6 +5,7 @@ package com.example.demo.config;
 
 import java.io.IOException;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -17,7 +18,7 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
  *          SpringBootの静的リソース機能でSPAを配信する際のリソースハンドラ設定
  *       </a>
  */
-//@Configuration
+@Configuration
 public class SpaModeResourceConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

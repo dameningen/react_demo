@@ -39,6 +39,7 @@ class DemoWebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
+                .antMatchers("/static/**", "/*.ico", "/#/**", "/").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/auth").permitAll()
                 .mvcMatchers("/hello").permitAll()
                 .anyRequest()
@@ -46,14 +47,18 @@ class DemoWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 // LOGIN
                 .formLogin()
-                .defaultSuccessUrl("/success");
+                // TODO ログインページは変なのを指定すると無限にリダイレクトしてしまう
+                .loginPage("/#/login")
+                .loginProcessingUrl("/perform_login")
+                //.defaultSuccessUrl("/success")
+                .usernameParameter("mailAddress").passwordParameter("password");
 
         http.exceptionHandling()
                 // '/api/**'へ未認証状態でのアクセスには401を返す
                 .defaultAuthenticationEntryPointFor(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
                         new AntPathRequestMatcher("/api/**"))
                 // 上記パス以外への未認証状態へのアクセスは302リダイレクトで'/login'へ遷移させる
-                .defaultAuthenticationEntryPointFor(new LoginUrlAuthenticationEntryPoint("/login"),
+                .defaultAuthenticationEntryPointFor(new LoginUrlAuthenticationEntryPoint("/#/login"),
                         AnyRequestMatcher.INSTANCE);
 
         // ajaxでcsrf tokenを利用するのでcookieに出力する
