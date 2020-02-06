@@ -43,7 +43,7 @@ class DemoWebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/static/**", "/*.ico", "/#/**", "/").permitAll()
+                .antMatchers("/", "/*.*", "/static/**", "/#/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/auth").permitAll()
                 .mvcMatchers("/hello").permitAll()
                 .anyRequest()
