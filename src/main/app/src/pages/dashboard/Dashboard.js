@@ -15,19 +15,17 @@ class DashBoard extends Component {
     super(props);
   }
 
-
-
   handleAuth() {
     let params = {
       mailAddress: 'admin@localhost',
       password: 'secret'
     }
     apiCallPost(AUTH_ENDPOINT, params);
-
   }
 
   handleGetList() {
-    apiCallGet(LIST_ENDPOINT, {});
+    // apiCallGet(LIST_ENDPOINT, {});
+    apiCallGet(LIST_ENDPOINT);
   }
 
   render() {

@@ -9,6 +9,7 @@ const HEDER_KEY_XSRF_TOKEN = 'X-XSRF-TOKEN';
 
 /**
  * Cookieから任意の値を取得し返却する。
+ * @param {*} cname 取得対象のキー
  */
 const getCookie = (cname) => {
     let name = cname + '=';
@@ -64,7 +65,7 @@ export const apiCallGet = (endPoint, params) => {
  * @param {*} endPoint エンドポイント
  * @param {*} params API実行パラメータ
  */
-export const apiCallPost = (endPoint, params) => {
+export const apiCallPost = (endPoint, params = {}) => {
     axiosCookieJarSupport(axios);
     let cookieJar = new tough.CookieJar();
 

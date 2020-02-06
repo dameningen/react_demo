@@ -1,7 +1,5 @@
 import React from "react";
 import axios from 'axios';
-import axiosCookieJarSupport from 'axios-cookiejar-support';
-import tough from 'tough-cookie';
 
 var UserStateContext = React.createContext();
 var UserDispatchContext = React.createContext();
@@ -58,8 +56,8 @@ function loginUser(dispatch, login, password, history, setIsLoading, setError) {
 
   if (!!login && !!password) {
     // ログイン処理
-    axiosCookieJarSupport(axios);
-    let cookieJar = new tough.CookieJar();
+    // axiosCookieJarSupport(axios);
+    // let cookieJar = new tough.CookieJar();
     var params = new URLSearchParams();
     params.append('mailAddress', login);
     params.append('password', password);
