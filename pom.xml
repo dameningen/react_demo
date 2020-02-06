@@ -91,13 +91,13 @@
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.9.0</version>
                 <executions>
+<!-- TODO ビルド時間短縮の為、一旦yarnのインストール処理はコメントアウトしておく
                     <execution>
                         <id>Install Node and Yarn</id>
                         <goals>
                             <goal>install-node-and-yarn</goal>
                         </goals>
                     </execution>
-
                     <execution>
                         <id>yarn install</id>
                         <goals>
@@ -107,7 +107,7 @@
                             <arguments>install</arguments>
                         </configuration>
                     </execution>
-
+ -->
                     <execution>
                         <id>Frontend production build</id>
                         <phase>prepare-package</phase>

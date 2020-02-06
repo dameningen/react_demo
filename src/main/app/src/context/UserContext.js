@@ -56,21 +56,6 @@ function loginUser(dispatch, login, password, history, setIsLoading, setError) {
   setError(false);
   setIsLoading(true);
 
-  // if (!!login && !!password) {
-  //   setTimeout(() => {
-  //     localStorage.setItem('id_token', 1)
-  //     setError(null)
-  //     setIsLoading(false)
-  //     dispatch({ type: 'LOGIN_SUCCESS' })
-
-  //     history.push('/app/dashboard')
-  //   }, 2000);
-  // } else {
-  //   dispatch({ type: "LOGIN_FAILURE" });
-  //   setError(true);
-  //   setIsLoading(false);
-  // }
-
   if (!!login && !!password) {
     // ログイン処理
     axiosCookieJarSupport(axios);
@@ -80,20 +65,9 @@ function loginUser(dispatch, login, password, history, setIsLoading, setError) {
     params.append('password', password);
     axios
       .post('http://localhost:8080/perform_login',
-              params,
-//        {
-//          mailAddress: 'admin@localhost',
-//          password: 'secret'
-//        },
-        {
-          jar: cookieJar,
-          withCredentials: true,
-        }
+        params
       )
       .then((response) => {
-        // TODO responseのステータスコード辺りでエラー判定する処理とかが必要そう
-        const config = response.config;
-        console.log("認証のレスポンス：" + JSON.stringify(config.jar.toJSON()));
         localStorage.setItem('id_token', 1)
         setError(null)
         setIsLoading(false)
@@ -103,16 +77,17 @@ function loginUser(dispatch, login, password, history, setIsLoading, setError) {
       })
       .catch((err) => {
         console.error(err.stack || err);
+        // TODO LOGIN_FAILUREのアクション未実装（いるのか？）
+        // dispatch({ type: "LOGIN_FAILURE" });
+        setError(true);
+        setIsLoading(false);
       });
 
   } else {
-    dispatch({ type: "LOGIN_FAILURE" });
+    // dispatch({ type: "LOGIN_FAILURE" });
     setError(true);
     setIsLoading(false);
   }
-
-
-
 }
 
 function signOut(dispatch, history) {

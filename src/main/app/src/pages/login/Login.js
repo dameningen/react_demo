@@ -37,10 +37,7 @@ function Login(props) {
 
   return (
     <Grid container className={classes.container}>
-      <div className={classes.logotypeContainer}>
-        <img src={logo} alt="logo" className={classes.logotypeImage} />
-        <Typography className={classes.logotypeText}>Material Admin</Typography>
-      </div>
+
       <div className={classes.formContainer}>
         <div className={classes.form}>
           <Tabs
@@ -58,14 +55,6 @@ function Login(props) {
               <Typography variant="h1" className={classes.greeting}>
                 Good Morning, User
               </Typography>
-              <Button size="large" className={classes.googleButton}>
-                &nbsp;Sign in with Google
-              </Button>
-              <div className={classes.formDividerContainer}>
-                <div className={classes.formDivider} />
-                <Typography className={classes.formDividerWord}>or</Typography>
-                <div className={classes.formDivider} />
-              </div>
               <Fade in={error}>
                 <Typography color="secondary" className={classes.errorMessage}>
                   Something is wrong with your login or password :(
@@ -224,20 +213,6 @@ function Login(props) {
                   </Button>
                 )}
               </div>
-              <div className={classes.formDividerContainer}>
-                <div className={classes.formDivider} />
-                <Typography className={classes.formDividerWord}>or</Typography>
-                <div className={classes.formDivider} />
-              </div>
-              <Button
-                size="large"
-                className={classnames(
-                  classes.googleButton,
-                  classes.googleButtonCreating,
-                )}
-              >
-                &nbsp;Sign in with Google
-              </Button>
             </React.Fragment>
           )}
         </div>

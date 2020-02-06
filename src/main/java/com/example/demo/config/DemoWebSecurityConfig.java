@@ -3,11 +3,14 @@
  */
 package com.example.demo.config;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -50,7 +54,7 @@ class DemoWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // TODO ログインページは変なのを指定すると無限にリダイレクトしてしまう
                 .loginPage("/#/login")
                 .loginProcessingUrl("/perform_login")
-                //.defaultSuccessUrl("/success")
+                .failureHandler(LOGIN_FAILED)
                 .usernameParameter("mailAddress").passwordParameter("password");
 
         http.exceptionHandling()
@@ -107,4 +111,19 @@ class DemoWebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
+    /**
+     * ログイン失敗時のハンドラ
+     */
+    private static final AuthenticationFailureHandler LOGIN_FAILED = (req, res, auth) -> {
+        // HTTP Statusは401
+        res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+        // Content-Type: application/json
+        res.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+        // Body
+        res.getWriter().write("{cdode : login failed.}");
+        res.getWriter().flush();
+    };
 }
