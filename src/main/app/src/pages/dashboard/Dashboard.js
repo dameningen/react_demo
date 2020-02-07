@@ -1,18 +1,50 @@
 import React, { useState, Component } from "react";
-import { apiCallGet, apiCallPost } from '../../libs/common/apiCall';
+import { connect } from 'react-redux';
+import MUIDataTable from "mui-datatables";
+import LoadingOverlay from 'react-loading-overlay';
 
-// export default function Dashboard(props) {
-//   return (
-//     <div>DashBord Page</div>
-//   );
-// }
+import { apiCallPost } from '../../libs/common/apiCall';
+import { fetchSbRandom } from '../../actions/springBootRandomActions';
 
 const AUTH_ENDPOINT = 'http://localhost:8080/api/auth';
-const LIST_ENDPOINT = 'http://localhost:8080/api/sbRandom';
+
+/**
+ * テーブル表示用のカラム設定値
+ */
+const columns = [
+  {
+    name: "type",
+    label: "タイプ",
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: "value.id",
+    label: "ID",
+    options: {
+      filter: true,
+      sort: false,
+    }
+  },
+  {
+    name: "value.quote",
+    label: "文言",
+    options: {
+      filter: true,
+      sort: false,
+    }
+  }
+]
 
 class DashBoard extends Component {
   constructor(props) {
     super(props);
+  }
+
+  componentDidMount() {
+    this.props.dispatch(fetchSbRandom());
   }
 
   handleAuth() {
@@ -24,26 +56,43 @@ class DashBoard extends Component {
   }
 
   handleGetList() {
-    // apiCallGet(LIST_ENDPOINT, {});
-    apiCallGet(LIST_ENDPOINT);
+    this.props.dispatch(fetchSbRandom());
   }
 
   render() {
+
     return (
       <div className="app">
-        <input
-          type="button"
-          value="認証"
-          onClick={() => this.handleAuth()}
-        />
-        <input
-          type="button"
-          value="一覧取得"
-          onClick={() => this.handleGetList()}
-        />
+        <LoadingOverlay
+          active={this.props.response.sbRandomState.isLoading}
+          spinner
+          text='Loading ...'
+        >
+          <MUIDataTable
+            title="Springの何か格言的なやつ"
+            data={this.props.response.sbRandomState.items}
+            columns={columns}
+            options={
+              {
+                filterType: "checkbox",
+              }
+            } />
+          <input
+            type="button"
+            value="認証"
+            onClick={() => this.handleAuth()}
+          />
+          <input
+            type="button"
+            value="一覧取得"
+            onClick={() => this.handleGetList()}
+          />
+        </LoadingOverlay>
       </div>
     );
   }
 }
 
-export default DashBoard;
+const mapStateToProps = (response) => ({ response });
+
+export default connect(mapStateToProps)(DashBoard);

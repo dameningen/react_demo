@@ -2,8 +2,6 @@ import axios from 'axios';
 import axiosCookieJarSupport from 'axios-cookiejar-support';
 import tough from 'tough-cookie';
 
-const AUTH_ENDPOINT = 'http://localhost:8080/api/auth';
-const LIST_ENDPOINT = 'http://localhost:8080/api/sbRandom';
 const COOKIE_KEY_XSRF_TOKEN = 'XSRF-TOKEN';
 const HEDER_KEY_XSRF_TOKEN = 'X-XSRF-TOKEN';
 
@@ -56,7 +54,7 @@ export const apiCallGet = (endPoint, params) => {
         })
         .catch((err) => {
             console.error(err.stack || err);
-            return err;
+            return { err };
         });
 }
 
@@ -90,6 +88,6 @@ export const apiCallPost = (endPoint, params = {}) => {
         })
         .catch((err) => {
             console.error(err.stack || err);
-            return err;
+            return { err };
         });
 }
