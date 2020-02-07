@@ -27,6 +27,7 @@ const sbRandomState = (state = initialState, action) => {
             state.isLoading = action.isLoading;
             return Object.assign({}, state);
         default:
+            state.isLoading = false;
             return state;
     }
 }

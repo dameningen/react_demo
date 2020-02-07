@@ -8,7 +8,6 @@ import {
 } from "@material-ui/core";
 import {
   Menu as MenuIcon,
-  NotificationsNone as NotificationsIcon,
   Person as AccountIcon,
   ArrowBack as ArrowBackIcon,
 } from "@material-ui/icons";
@@ -27,10 +26,6 @@ import {
   toggleSidebar,
 } from "../../context/LayoutContext";
 import { useUserDispatch, signOut } from "../../context/UserContext";
-
-
-
-
 
 export default function Header(props) {
   var classes = useStyles();

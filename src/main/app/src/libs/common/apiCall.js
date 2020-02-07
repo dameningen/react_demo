@@ -39,7 +39,7 @@ export const apiCallGet = (endPoint, params) => {
     // リクエストヘッダにCookieから取得したXSRF-TOKENを設定する
     axios.defaults.headers[HEDER_KEY_XSRF_TOKEN] = xsrfToken;
 
-    axios
+    return axios
         .get(endPoint,
             params,
             {
@@ -52,9 +52,9 @@ export const apiCallGet = (endPoint, params) => {
             console.log('apiCallGet レスポンス' + JSON.stringify(response.data));
             return response;
         })
-        .catch((err) => {
-            console.error(err.stack || err);
-            return { err };
+        .catch((error) => {
+            console.error(error.stack || error);
+            return { error };
         });
 }
 
@@ -72,7 +72,7 @@ export const apiCallPost = (endPoint, params = {}) => {
     // リクエストヘッダにCookieから取得したXSRF-TOKENを設定する
     axios.defaults.headers[HEDER_KEY_XSRF_TOKEN] = xsrfToken;
 
-    axios
+    return axios
         .post(endPoint,
             params,
             {
@@ -86,8 +86,8 @@ export const apiCallPost = (endPoint, params = {}) => {
             console.log("apiCallPost レスポンス" + JSON.stringify(response.data));
             return response;
         })
-        .catch((err) => {
-            console.error(err.stack || err);
-            return { err };
+        .catch((error) => {
+            console.error(error.stack || error);
+            return { error };
         });
 }
