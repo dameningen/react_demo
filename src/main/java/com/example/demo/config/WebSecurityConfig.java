@@ -27,7 +27,10 @@ import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.example.demo.domain.enums.Roles;
+import com.example.demo.domain.model.User;
 import com.example.demo.domain.service.AccountService;
+import com.example.demo.domain.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,14 +45,18 @@ import lombok.extern.slf4j.Slf4j;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private AccountService userService;
+    private AccountService accountService;
+    @Autowired
+    private UserService userService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
                 .antMatchers("/", "/*.*", "/static/**", "/#/**").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/auth").permitAll()
+                // .antMatchers(HttpMethod.POST, "/api/user/create").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -75,7 +82,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         cookieCsrfTokenRepository.setCookieHttpOnly(false);
         cookieCsrfTokenRepository.setCookiePath("/");
         http.csrf()
-                .csrfTokenRepository(cookieCsrfTokenRepository);
+                .csrfTokenRepository(cookieCsrfTokenRepository)
+                // H2-consoleのパスはCSRF無効にしておく
+                .ignoringAntMatchers("/h2-console/**")
+                .and().headers().frameOptions().sameOrigin();
 
         // RESTful APIを公開する場合、攻撃されやすくなるのでcorsの設定をしておく
         CorsConfiguration corsConfiguration = new CorsConfiguration();
@@ -99,10 +109,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .userDetailsService(userService)
+                .userDetailsService(accountService)
                 .passwordEncoder(passwordEncoder());
         //TODO: propertyでadmin情報は管理しましょう。
-        userService.registerAdmin("admin", "secret", "admin@localhost");
+        accountService.registerAdmin("admin", "secret", "admin@localhost");
+        // TODO：動作確認用にUserテーブルにデータを登録する
+        log.debug("動作確認用にUserテーブルにデータを登録。");
+        User user = new User("1", "admin@localhost", "pass", Roles.ROLE_ADMIN);
+        userService.createOrUpdate(user);
     }
 
     @Bean

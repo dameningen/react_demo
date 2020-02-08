@@ -7,6 +7,7 @@ import { apiCallPost } from '../../libs/common/apiCall';
 import { fetchSbRandom } from '../../actions/springBootRandomActions';
 
 const AUTH_ENDPOINT = 'http://localhost:8080/api/auth';
+const USESR_CREATE_ENDPOINT = 'http://localhost:8080/api/user/create';
 
 /**
  * テーブル表示用のカラム設定値
@@ -59,6 +60,16 @@ class DashBoard extends Component {
     this.props.dispatch(fetchSbRandom());
   }
 
+  handleAddUser() {
+    let params = {
+      id: "9",
+      email: "user1@localhost",
+      password: "pass",
+      roles: "ROLE_CUSTOMER"
+    }
+    apiCallPost(USESR_CREATE_ENDPOINT, params);
+  }
+
   render() {
 
     return (
@@ -86,6 +97,11 @@ class DashBoard extends Component {
             type="button"
             value="一覧取得"
             onClick={() => this.handleGetList()}
+          />
+          <input
+            type="button"
+            value="ユーザー登録"
+            onClick={() => this.handleAddUser()}
           />
         </LoadingOverlay>
       </div>
