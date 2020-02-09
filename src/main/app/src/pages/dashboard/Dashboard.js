@@ -1,12 +1,15 @@
 import React, { useState, Component } from "react";
 import { connect } from 'react-redux';
 import MUIDataTable from "mui-datatables";
+import { Button } from '@material-ui/core';
 import LoadingOverlay from 'react-loading-overlay';
 
-import { apiCallPost } from '../../libs/common/apiCall';
+import { apiCallPost, apiCallGet } from '../../libs/common/apiCall';
 import { fetchSbRandom } from '../../actions/springBootRandomActions';
 
 const AUTH_ENDPOINT = 'http://localhost:8080/api/auth';
+const GET_USER_ENDPOINT = 'http://localhost:8080/api/getUserInfo';
+const IS_ADMIN_ENDPOINT = 'http://localhost:8080/api/isAdminUser';
 const USESR_CREATE_ENDPOINT = 'http://localhost:8080/api/user/create';
 
 /**
@@ -70,6 +73,15 @@ class DashBoard extends Component {
     apiCallPost(USESR_CREATE_ENDPOINT, params);
   }
 
+  handleGetUser() {
+    apiCallGet(GET_USER_ENDPOINT);
+  }
+
+  handleIsAdmin() {
+    apiCallGet(IS_ADMIN_ENDPOINT);
+  }
+
+
   render() {
 
     return (
@@ -103,6 +115,12 @@ class DashBoard extends Component {
             value="ユーザー登録"
             onClick={() => this.handleAddUser()}
           />
+          <Button variant="contained" onClick={() => this.handleGetUser()}>
+            ユーザー情報取得
+          </Button>
+          <Button variant="contained" color="primary" onClick={() => this.handleIsAdmin()}>
+            ユーザー権限判定
+          </Button>
         </LoadingOverlay>
       </div>
     );

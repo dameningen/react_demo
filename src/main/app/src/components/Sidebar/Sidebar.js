@@ -36,6 +36,7 @@ const structure = [
     label: "Typography",
     link: "/app/typography",
     icon: <TypographyIcon />,
+    isAdminPage: true,
   },
   { id: 2, label: "Tables", link: "/app/tables", icon: <TableIcon /> },
   {
@@ -93,7 +94,7 @@ function Sidebar({ location }) {
   // local
   var [isPermanent, setPermanent] = useState(true);
 
-  useEffect(function() {
+  useEffect(function () {
     window.addEventListener("resize", handleWindowWidthChange);
     handleWindowWidthChange();
     return function cleanup() {

@@ -3,6 +3,7 @@
  */
 package com.example.demo.application.controller;
 
+import java.security.Principal;
 import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +14,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("api")
 @Slf4j
-public class AuthController {
+public class AuthController extends AbstractController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -53,6 +57,21 @@ public class AuthController {
         }
 
         return auth;
+    }
+
+    @GetMapping("/getUserInfo")
+    public Account getUserInfo(Principal principal, Model model) {
+        Authentication authentication = (Authentication) principal;
+        Account auth = (Account) authentication.getPrincipal();
+
+        return auth;
+    }
+
+    @GetMapping("/isAdminUser")
+    public boolean isAdminUser(Principal principal, Model model) {
+        Authentication authentication = (Authentication) principal;
+        Account account = (Account) authentication.getPrincipal();
+        return account.isAdmin();
     }
 
     /**

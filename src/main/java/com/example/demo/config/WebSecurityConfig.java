@@ -113,6 +113,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(passwordEncoder());
         //TODO: propertyでadmin情報は管理しましょう。
         accountService.registerAdmin("admin", "secret", "admin@localhost");
+        accountService.registerUser("user", "secret", "user@localhost");
         // TODO：動作確認用にUserテーブルにデータを登録する
         log.debug("動作確認用にUserテーブルにデータを登録。");
         User user = new User("1", "admin@localhost", "pass", Roles.ROLE_ADMIN);

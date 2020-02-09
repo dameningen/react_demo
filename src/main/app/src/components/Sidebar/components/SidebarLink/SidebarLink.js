@@ -27,6 +27,7 @@ export default function SidebarLink({
   isSidebarOpened,
   nested,
   type,
+  isAdminPage,
 }) {
   var classes = useStyles();
 
@@ -35,6 +36,11 @@ export default function SidebarLink({
   var isLinkActive =
     link &&
     (location.pathname === link || location.pathname.indexOf(link) !== -1);
+
+  // TODO：管理者のみ表示させる処理実装
+  if (judgeAdminOnly(isAdminPage)) {
+    return (null);
+  }
 
   if (type === "title")
     return (
@@ -141,5 +147,20 @@ export default function SidebarLink({
       e.preventDefault();
       setIsOpen(!isOpen);
     }
+  }
+
+  // TODO：管理者権限有りのユーザのみ表示させる
+  function judgeAdminOnly(isAdminPage) {
+    // TODO:値の持ち方とか変換方法とか要検討
+    let isAdminUser = toBoolean(sessionStorage.getItem("isAdmin"));
+    let res = !!isAdminPage && !isAdminUser;
+    return res;
+  }
+
+  function toBoolean(str) {
+    if (str === undefined || str === null) {
+      return false;
+    }
+    return str.toLowerCase() === "true";
   }
 }

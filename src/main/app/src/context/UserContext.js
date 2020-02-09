@@ -1,5 +1,6 @@
 import React from "react";
 import axios from 'axios';
+import { apiCallGet } from '../libs/common/apiCall';
 
 var UserStateContext = React.createContext();
 var UserDispatchContext = React.createContext();
@@ -18,7 +19,7 @@ function userReducer(state, action) {
 
 function UserProvider({ children }) {
   var [state, dispatch] = React.useReducer(userReducer, {
-    isAuthenticated: !!localStorage.getItem("id_token"),
+    isAuthenticated: !!sessionStorage.getItem("id_token"),
   });
 
   return (
@@ -50,46 +51,56 @@ export { UserProvider, useUserState, useUserDispatch, loginUser, signOut };
 
 // ###########################################################
 
-function loginUser(dispatch, login, password, history, setIsLoading, setError) {
+async function loginUser(dispatch, login, password, history, setIsLoading, setError) {
   setError(false);
   setIsLoading(true);
 
   if (!!login && !!password) {
     // ログイン処理
-    // axiosCookieJarSupport(axios);
-    // let cookieJar = new tough.CookieJar();
     var params = new URLSearchParams();
     params.append('mailAddress', login);
     params.append('password', password);
-    axios
-      .post('http://localhost:8080/perform_login',
-        params
-      )
-      .then((response) => {
-        localStorage.setItem('id_token', 1)
-        setError(null)
-        setIsLoading(false)
-        dispatch({ type: 'LOGIN_SUCCESS' })
+    try {
+      // ログイン処理実行
+      await axios.post('http://localhost:8080/perform_login', params);
+      sessionStorage.setItem('id_token', 1)
+      // TODO：ログイン成功時はここで権限情報チェックのAPIを実行してsessionStorageに
+      //       設定して画面の表示制御を行う（イマイチだがとりあえず）
+      await isAdminRequest();
+      console.log('localStorage.getItem_isAdmin:' + sessionStorage.getItem('isAdmin'));
 
-        history.push('/app/dashboard')
-      })
-      .catch((err) => {
-        console.error(err.stack || err);
-        // TODO LOGIN_FAILUREのアクション未実装（いるのか？）
-        // dispatch({ type: "LOGIN_FAILURE" });
-        setError(true);
-        setIsLoading(false);
-      });
+      setError(null)
+      setIsLoading(false)
+      dispatch({ type: 'LOGIN_SUCCESS' })
 
-  } else {
-    // dispatch({ type: "LOGIN_FAILURE" });
-    setError(true);
-    setIsLoading(false);
+      history.push('/app/dashboard')
+
+    } catch (error) {
+      console.error(error.stack || error);
+      // TODO LOGIN_FAILUREのアクション未実装（いるのか？）
+      // dispatch({ type: "LOGIN_FAILURE" });
+      setError(true);
+      setIsLoading(false);
+
+    }
   }
+}
+/**
+ * ログインしたユーザーが管理者権限を持っているかどうかの情報を取得し、
+ * localStorageに保存する。
+ */
+function isAdminRequest() {
+  return apiCallGet('http://localhost:8080/api/isAdminUser')
+    .then((response) => {
+      console.log("★isAdmin:" + JSON.stringify(response));
+      sessionStorage.setItem('isAdmin', response.data)
+    });
 }
 
 function signOut(dispatch, history) {
-  localStorage.removeItem("id_token");
+  // localStorage.removeItem("id_token");
+  sessionStorage.removeItem("id_token");
+  sessionStorage.removeItem("isAdmin");
   dispatch({ type: "SIGN_OUT_SUCCESS" });
   history.push("/login");
 }
