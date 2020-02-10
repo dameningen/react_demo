@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.application.resource.Response;
-import com.example.demo.domain.model.User;
+import com.example.demo.domain.entity.User;
 import com.example.demo.domain.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;

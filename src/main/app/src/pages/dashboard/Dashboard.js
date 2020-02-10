@@ -11,6 +11,7 @@ const AUTH_ENDPOINT = 'http://localhost:8080/api/auth';
 const GET_USER_ENDPOINT = 'http://localhost:8080/api/getUserInfo';
 const IS_ADMIN_ENDPOINT = 'http://localhost:8080/api/isAdminUser';
 const USESR_CREATE_ENDPOINT = 'http://localhost:8080/api/user/create';
+const TICKET_CREATE_ENDPOINT = 'http://localhost:8080/api/ticket/create';
 
 /**
  * テーブル表示用のカラム設定値
@@ -81,6 +82,17 @@ class DashBoard extends Component {
     apiCallGet(IS_ADMIN_ENDPOINT);
   }
 
+  handleCreateTicket() {
+    let params = {
+      priority: "HIGH",
+      title: "新規チケット",
+      category: "QUESTION",
+      description: "新規チケットの説明何かをいっぱい書いたりする。",
+    }
+    apiCallPost(TICKET_CREATE_ENDPOINT, params);
+
+  }
+
 
   render() {
 
@@ -120,6 +132,9 @@ class DashBoard extends Component {
           </Button>
           <Button variant="contained" color="primary" onClick={() => this.handleIsAdmin()}>
             ユーザー権限判定
+          </Button>
+          <Button variant="contained" color="primary" onClick={() => this.handleCreateTicket()}>
+            チケット新規登録
           </Button>
         </LoadingOverlay>
       </div>

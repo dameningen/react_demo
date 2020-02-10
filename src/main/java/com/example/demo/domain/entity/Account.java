@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.example.demo.domain.model;
+package com.example.demo.domain.entity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,7 +16,10 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -46,7 +49,12 @@ public class Account implements UserDetails {
         ROLE_USER, ROLE_MANAGER, ROLE_ADMIN
     };
 
+    /** ID */
     @Id
+    @Column(nullable = false, unique = true)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private long id;
+
     @Column(nullable = false, unique = true)
     private String username;
 
@@ -70,6 +78,9 @@ public class Account implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Set<Authority> authorities;
+
+    @OneToMany(mappedBy = "assignedUser")
+    private List<Ticket> tickets;
 
     /**
      * デフォルトコンストラクタ。<br>

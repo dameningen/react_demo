@@ -6,7 +6,7 @@ package com.example.demo.domain.repository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.domain.model.Account;
+import com.example.demo.domain.entity.Account;
 
 /**
  * @author dameningen

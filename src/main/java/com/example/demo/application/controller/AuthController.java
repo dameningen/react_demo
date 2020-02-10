@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.application.resource.AuthResponse;
-import com.example.demo.domain.model.Account;
+import com.example.demo.domain.entity.Account;
 
 import lombok.extern.slf4j.Slf4j;
 

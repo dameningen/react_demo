@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,8 +28,8 @@ import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.example.demo.domain.entity.User;
 import com.example.demo.domain.enums.Roles;
-import com.example.demo.domain.model.User;
 import com.example.demo.domain.service.AccountService;
 import com.example.demo.domain.service.UserService;
 
@@ -108,16 +109,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(accountService)
-                .passwordEncoder(passwordEncoder());
-        //TODO: propertyでadmin情報は管理しましょう。
-        accountService.registerAdmin("admin", "secret", "admin@localhost");
-        accountService.registerUser("user", "secret", "user@localhost");
-        // TODO：動作確認用にUserテーブルにデータを登録する
-        log.debug("動作確認用にUserテーブルにデータを登録。");
-        User user = new User("1", "admin@localhost", "pass", Roles.ROLE_ADMIN);
-        userService.createOrUpdate(user);
+        try {
+            auth
+                    .userDetailsService(accountService)
+                    .passwordEncoder(passwordEncoder());
+            //TODO: propertyでadmin情報は管理しましょう。
+            accountService.registerAdmin("admin", "secret", "admin@localhost");
+            accountService.registerUser("user", "secret", "user@localhost");
+            // TODO：動作確認用にUserテーブルにデータを登録する
+            log.debug("動作確認用にUserテーブルにデータを登録。");
+            User user = new User("1", "admin@localhost", "pass", Roles.ROLE_ADMIN);
+            userService.createOrUpdate(user);
+
+        } catch (DataIntegrityViolationException de) {
+            log.info("管理ユーザは既に登録済み。");
+        }
     }
 
     @Bean

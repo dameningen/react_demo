@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.domain.model.User;
+import com.example.demo.domain.entity.User;
 
 /**
  * ユーザー管理用の処理のインタフェース。
