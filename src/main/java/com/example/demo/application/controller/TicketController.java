@@ -6,11 +6,14 @@ package com.example.demo.application.controller;
 import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -77,9 +80,33 @@ public class TicketController extends AbstractController {
 
     }
 
+    @GetMapping(value = "{page}/{count}")
+    public ResponseEntity<Response<Page<Ticket>>> findAll(Principal principal, Model model, @PathVariable int page,
+            @PathVariable int count) {
+
+        log.debug("チケット取得リクエスト page:" + page + " count:" + count);
+
+        Response<Page<Ticket>> response = new Response<Page<Ticket>>();
+        Page<Ticket> tickets = null;
+        Account account = getUser(principal, model);
+        if (account.isAdmin() || account.isManager()) {
+            log.debug("■Admin or Managerアカウント");
+            // TODO 管理者権限の場合は登録者を見ずにすべてのチケットを取得する
+            tickets = ticketService.listTicket(page, count);
+        } else {
+            long accountId = account.getId();
+            log.debug("■Userアカウント id：" + accountId);
+            tickets = ticketService.findByCurrentAuthor(page, count, account);
+        }
+        log.debug("取得したチケット：" + tickets.getContent());
+        response.setData(tickets);
+        return ResponseEntity.ok(response);
+    }
+
     private Account getUser(Principal principal, Model model) {
         Authentication authentication = (Authentication) principal;
         Account account = (Account) authentication.getPrincipal();
+        // TODO nullチェック要る？
         return account;
     }
 }

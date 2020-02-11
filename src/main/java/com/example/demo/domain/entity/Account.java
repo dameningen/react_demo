@@ -29,12 +29,20 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 /**
  * @author dameningen
  *
  */
 @Entity
 @Table(name = "accounts")
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+// @Data ※@OneToManyなフィールドにGetter/Setterを作成するとエラーになってしまうっぽい？
 public class Account implements UserDetails {
 
     private static final long serialVersionUID = 1L;
@@ -81,15 +89,6 @@ public class Account implements UserDetails {
 
     @OneToMany(mappedBy = "assignedUser")
     private List<Ticket> tickets;
-
-    /**
-     * デフォルトコンストラクタ。<br>
-     * JPA利用時必須？
-     *
-     */
-    public Account() {
-        // do nothing.
-    }
 
     /**
      * コンストラクタ。
@@ -226,6 +225,14 @@ public class Account implements UserDetails {
 
     public Date getCreatedAt() {
         return createdAt;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
 }

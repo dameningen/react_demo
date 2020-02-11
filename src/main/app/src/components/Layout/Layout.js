@@ -7,6 +7,7 @@ import { useLayoutState } from "../../context/LayoutContext";
 import Dashboard from "../../pages/dashboard/Dashboard";
 import Icons from "../../pages/icons/Icons";
 import Tables from "../../pages/tables/Tables";
+import TicketList from "../../pages/ticket/TicketList";
 // components
 import Header from "../Header/Header";
 import Sidebar from "../Sidebar/Sidebar";
@@ -33,6 +34,7 @@ function Layout(props) {
           <Switch>
             <Route path="/app/dashboard" component={Dashboard} />
             <Route path="/app/tables" component={Tables} />
+            <Route path="/app/ticketList" component={TicketList} />
             <Route
               exact
               path="/app/ui"

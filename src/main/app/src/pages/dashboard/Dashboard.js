@@ -13,6 +13,8 @@ const IS_ADMIN_ENDPOINT = 'http://localhost:8080/api/isAdminUser';
 const USESR_CREATE_ENDPOINT = 'http://localhost:8080/api/user/create';
 const TICKET_CREATE_ENDPOINT = 'http://localhost:8080/api/ticket/create';
 
+const TICKET_LIST_ENDPOINT = 'http://localhost:8080/api/ticket/0/10';
+
 /**
  * テーブル表示用のカラム設定値
  */
@@ -93,6 +95,9 @@ class DashBoard extends Component {
 
   }
 
+  handleGetTicketList() {
+    apiCallGet(TICKET_LIST_ENDPOINT);
+  }
 
   render() {
 
@@ -135,6 +140,9 @@ class DashBoard extends Component {
           </Button>
           <Button variant="contained" color="primary" onClick={() => this.handleCreateTicket()}>
             チケット新規登録
+          </Button>
+          <Button variant="contained" color="primary" onClick={() => this.handleGetTicketList()}>
+            チケットリスト取得
           </Button>
         </LoadingOverlay>
       </div>

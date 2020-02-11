@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
 import sbRandomState from './sbRandomReducer';
+import ticketListState from './ticketListReducer';
 
 const rootReducer = combineReducers({
-    sbRandomState
+    sbRandomState,
+    ticketListState
 });
 
 export default rootReducer;
