@@ -7,12 +7,14 @@ import { useLayoutState } from "../../context/LayoutContext";
 import Dashboard from "../../pages/dashboard/Dashboard";
 import Icons from "../../pages/icons/Icons";
 import Tables from "../../pages/tables/Tables";
+import TicketDetail from "../../pages/ticket/TicketDetail";
 import TicketList from "../../pages/ticket/TicketList";
 // components
 import Header from "../Header/Header";
 import Sidebar from "../Sidebar/Sidebar";
 // styles
 import useStyles from "./styles";
+
 
 function Layout(props) {
   var classes = useStyles();
@@ -35,6 +37,7 @@ function Layout(props) {
             <Route path="/app/dashboard" component={Dashboard} />
             <Route path="/app/tables" component={Tables} />
             <Route path="/app/ticketList" component={TicketList} />
+            <Route path="/app/ticket/:id" component={TicketDetail} />
             <Route
               exact
               path="/app/ui"

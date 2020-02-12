@@ -4,6 +4,7 @@
 package com.example.demo.application.controller;
 
 import java.security.Principal;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -80,6 +81,27 @@ public class TicketController extends AbstractController {
 
     }
 
+    @GetMapping(value = "{id}")
+    public ResponseEntity<Response<Ticket>> findById(@PathVariable("id") long id) {
+        Response<Ticket> response = new Response<Ticket>();
+        Optional<Ticket> ticketOptional = ticketService.findById(id);
+        Ticket ticket = ticketOptional.get();
+        if (ticket == null) {
+            response.getErrors().add("ID[" + id + "]に対応するチケットが存在しません。");
+            return ResponseEntity.badRequest().body(response);
+        }
+        response.setData(ticket);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * ページ番号と1ページ辺りの要素数を指定してチケットの一覧を取得する。
+     * @param principal
+     * @param model
+     * @param page
+     * @param count
+     * @return
+     */
     @GetMapping(value = "{page}/{count}")
     public ResponseEntity<Response<Page<Ticket>>> findAll(Principal principal, Model model, @PathVariable int page,
             @PathVariable int count) {
@@ -103,6 +125,12 @@ public class TicketController extends AbstractController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * アカウント情報を取得する。
+     * @param principal
+     * @param model
+     * @return
+     */
     private Account getUser(Principal principal, Model model) {
         Authentication authentication = (Authentication) principal;
         Account account = (Account) authentication.getPrincipal();

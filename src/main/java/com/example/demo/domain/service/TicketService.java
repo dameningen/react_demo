@@ -3,6 +3,8 @@
  */
 package com.example.demo.domain.service;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 
 import com.example.demo.domain.entity.Account;
@@ -13,6 +15,13 @@ import com.example.demo.domain.entity.Ticket;
  *
  */
 public interface TicketService {
+
+    /**
+     * チケットIDを指定してチケット情報を取得する。
+     * @param id チケットID
+     * @return 対応するチケットインスタンス
+     */
+    Optional<Ticket> findById(long id);
 
     /**
      * チケットを新規作成または更新する。

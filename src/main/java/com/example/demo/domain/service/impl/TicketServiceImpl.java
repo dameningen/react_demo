@@ -3,6 +3,8 @@
  */
 package com.example.demo.domain.service.impl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +29,15 @@ public class TicketServiceImpl implements TicketService {
     /**
      * {@inheritDoc}
      */
+    @Override
+    public Optional<Ticket> findById(long id) {
+        return this.ticketRepository.findById(id);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public Ticket createOrUpdate(Ticket ticket) {
         return this.ticketRepository.save(ticket);
     }
@@ -34,6 +45,7 @@ public class TicketServiceImpl implements TicketService {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Page<Ticket> listTicket(int page, int count) {
         Pageable pages = PageRequest.of(page, count);
         return this.ticketRepository.findAll(pages);
@@ -42,6 +54,7 @@ public class TicketServiceImpl implements TicketService {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Page<Ticket> findByCurrentAuthor(int page, int count, Account account) {
         Pageable pages = PageRequest.of(page, count);
         return this.ticketRepository.findByAuthorOrderByCreatedAtDesc(pages, account);
