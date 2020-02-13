@@ -9,7 +9,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-import com.example.demo.domain.enums.Roles;
+import com.example.demo.domain.enums.RolesEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -50,6 +50,6 @@ public class User implements Serializable {
      * ロール
      */
     @Column(nullable = false)
-    private Roles roles;
+    private RolesEnum roles;
 
 }

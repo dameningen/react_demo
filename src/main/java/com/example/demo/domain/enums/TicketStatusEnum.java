@@ -10,7 +10,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum TicketStatus {
+public enum TicketStatusEnum {
 
     New(1, "新規"), Assigned(2, "割り当て済み"), Resolved(3, "解決済み"),
     Approved(4, "承認済み"), Disapproved(5, "不承認"), Closed(6, "終了");
@@ -18,7 +18,7 @@ public enum TicketStatus {
     private int code;
     private String name;
 
-    public static TicketStatus getStatus(String status) {
+    public static TicketStatusEnum getStatus(String status) {
         switch (status) {
         case "New":
             return New;

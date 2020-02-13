@@ -41,7 +41,7 @@ import lombok.ToString;
 @Table(name = "accounts")
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = { "password", "tickets" })
 // @Data ※@OneToManyなフィールドにGetter/Setterを作成するとエラーになってしまうっぽい？
 public class Account implements UserDetails {
 

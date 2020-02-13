@@ -1,7 +1,7 @@
 // Picker
 import DateFnsUtils from '@date-io/date-fns';
 import { Button, CssBaseline, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, MenuItem, Paper, RadioGroup } from '@material-ui/core';
-import { DatePicker, MuiPickersUtilsProvider, TimePicker } from '@material-ui/pickers';
+import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import ja from 'date-fns/locale/ja';
 import { Checkbox, Radio, Select, TextField } from 'final-form-material-ui';
 import React, { Component } from "react";
@@ -10,7 +10,13 @@ import { connect } from 'react-redux';
 import { fetchTicketDetail } from '../../actions/ticketDetailActions';
 
 
-function DatePickerWrapper(props) {
+/**
+ * materilal-uiのKeyboardDateTimePickerWrapperラッパー。
+ * ※material-uiのDatePickerは最新のdate-ioを
+ * インストールするとエラーになって動かないので1.3.13版を利用する必要がある。
+ * @param {*} props 
+ */
+function KeyboardDateTimePickerWrapper(props) {
     const {
         input: { name, onChange, value, ...restInput },
         meta,
@@ -21,7 +27,7 @@ function DatePickerWrapper(props) {
         meta.touched;
 
     return (
-        <DatePicker
+        <KeyboardDateTimePicker
             {...rest}
             name={name}
             helperText={showError ? meta.error || meta.submitError : undefined}
@@ -29,31 +35,11 @@ function DatePickerWrapper(props) {
             inputProps={restInput}
             onChange={onChange}
             value={value === '' ? null : value}
+            inputVariant="outlined"
             autoOk={true}
-        />
-    );
-}
-
-function TimePickerWrapper(props) {
-    const {
-        input: { name, onChange, value, ...restInput },
-        meta,
-        ...rest
-    } = props;
-    const showError =
-        ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) &&
-        meta.touched;
-
-    return (
-        <TimePicker
-            {...rest}
-            name={name}
-            helperText={showError ? meta.error || meta.submitError : undefined}
-            error={showError}
-            inputProps={restInput}
-            onChange={onChange}
-            value={value === '' ? null : value}
             ampm={false}
+            disablePast
+            format="yyyy/MM/dd HH:mm"
         />
     );
 }
@@ -97,9 +83,19 @@ class TicketDetail extends Component {
                     initialValues={this.props.response.ticketDetailState.items}
                     validate={validate}
                     render={({ handleSubmit, reset, submitting, pristine, values }) => (
-                        <form onSubmit={handleSubmit} noValidate>
+                        <form onSubmit={handleSubmit}>
                             <Paper style={{ padding: 16 }}>
                                 <Grid container alignItems="flex-start" spacing={2}>
+                                    <Grid item xs={12}>
+                                        <Field
+                                            fullWidth
+                                            required
+                                            name="title"
+                                            component={TextField}
+                                            type="text"
+                                            label="チケットタイトル"
+                                        />
+                                    </Grid>
                                     <Grid item xs={6}>
                                         <Field
                                             fullWidth
@@ -113,12 +109,17 @@ class TicketDetail extends Component {
                                     <Grid item xs={6}>
                                         <Field
                                             fullWidth
-                                            required
-                                            name="title"
-                                            component={TextField}
-                                            type="text"
-                                            label="チケットタイトル"
-                                        />
+                                            name="status.code"
+                                            component={Select}
+                                            label="ステータス"
+                                            formControlProps={{ fullWidth: true }}>
+                                            <MenuItem value={1}>新規</MenuItem>
+                                            <MenuItem value={2}>割り当て済み</MenuItem>
+                                            <MenuItem value={3}>解決済み</MenuItem>
+                                            <MenuItem value={4}>承認済み</MenuItem>
+                                            <MenuItem value={5}>不承認</MenuItem>
+                                            <MenuItem value={6}>終了</MenuItem>
+                                        </Field>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Field
@@ -137,7 +138,6 @@ class TicketDetail extends Component {
                                         <Field
                                             name="correspondence"
                                             fullWidth
-                                            required
                                             component={TextField}
                                             multiline
                                             rows={6}
@@ -146,28 +146,17 @@ class TicketDetail extends Component {
                                             label="対応内容"
                                         />
                                     </Grid>
-                                    <Grid item xs={6}>
-                                        <Field
-                                            name="status"
-                                            fullWidth
-                                            required
-                                            component={TextField}
-                                            type="text"
-                                            label="ステータス"
-                                        />
-                                    </Grid>
                                     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ja}>
-                                        <Grid item xs={6}>
+                                        <Grid item xs={12}>
                                             <Field
                                                 name="deadLine"
-                                                component={DatePickerWrapper}
-                                                fullWidth
+                                                component={KeyboardDateTimePickerWrapper}
                                                 margin="normal"
                                                 label="期限"
                                             />
                                         </Grid>
                                     </MuiPickersUtilsProvider>
-                                    <Grid item xs={6}>
+                                    <Grid item xs={4}>
                                         <Field
                                             name="author.username"
                                             fullWidth
@@ -177,7 +166,7 @@ class TicketDetail extends Component {
                                             label="登録者"
                                         />
                                     </Grid>
-                                    <Grid item xs={6}>
+                                    <Grid item xs={4}>
                                         <Field
                                             name="updater.username"
                                             fullWidth
@@ -187,7 +176,7 @@ class TicketDetail extends Component {
                                             label="更新者"
                                         />
                                     </Grid>
-                                    <Grid item xs={6}>
+                                    <Grid item xs={4}>
                                         <Field
                                             name="assignedUser.username"
                                             fullWidth
@@ -201,7 +190,7 @@ class TicketDetail extends Component {
                                         <Grid item xs={6}>
                                             <Field
                                                 name="createdAt"
-                                                component={DatePickerWrapper}
+                                                component={KeyboardDateTimePickerWrapper}
                                                 fullWidth
                                                 margin="normal"
                                                 label="登録日"
@@ -213,7 +202,7 @@ class TicketDetail extends Component {
                                         <Grid item xs={6}>
                                             <Field
                                                 name="updatedAt"
-                                                component={DatePickerWrapper}
+                                                component={KeyboardDateTimePickerWrapper}
                                                 fullWidth
                                                 margin="normal"
                                                 label="更新日"

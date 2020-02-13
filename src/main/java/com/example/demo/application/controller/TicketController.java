@@ -23,7 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.application.resource.Response;
 import com.example.demo.domain.entity.Account;
 import com.example.demo.domain.entity.Ticket;
-import com.example.demo.domain.enums.TicketStatus;
+import com.example.demo.domain.entity.TicketStatus;
+import com.example.demo.domain.enums.TicketStatusEnum;
 import com.example.demo.domain.service.TicketService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -62,7 +63,7 @@ public class TicketController extends AbstractController {
             }
 
             // リクエストに設定された情報に新規登録用の情報を付与する
-            ticket.setStatus(TicketStatus.New);
+            ticket.setStatus(TicketStatus.getTicketStatus(TicketStatusEnum.New));
             Account account = getUser(principal, model);
             ticket.setAuthor(account);
             ticket.setUpdater(account);
@@ -122,12 +123,6 @@ public class TicketController extends AbstractController {
         }
         log.debug("■取得したチケット：" + tickets.getContent());
         response.setData(tickets);
-
-        // TODO 画面側のローディング描画確認用にちょっと遅延させる
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-        }
 
         return ResponseEntity.ok(response);
     }

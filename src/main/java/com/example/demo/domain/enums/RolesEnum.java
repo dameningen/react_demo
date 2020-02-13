@@ -1,6 +1,6 @@
 package com.example.demo.domain.enums;
 
-public enum Roles {
+public enum RolesEnum {
 
     ROLE_ADMIN,
     ROLE_CUSTOMER,

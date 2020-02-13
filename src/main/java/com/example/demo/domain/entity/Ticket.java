@@ -22,9 +22,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 
-import com.example.demo.domain.enums.TicketCategory;
-import com.example.demo.domain.enums.TicketPriority;
-import com.example.demo.domain.enums.TicketStatus;
+import com.example.demo.domain.enums.TicketCategoryEnum;
+import com.example.demo.domain.enums.TicketPriorityEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -53,7 +52,7 @@ public class Ticket implements Serializable {
     /** 優先度（SelectBox） */
     @Column(nullable = false, unique = false)
     @Enumerated(EnumType.STRING)
-    private TicketPriority priority;
+    private TicketPriorityEnum priority;
 
     /** チケットタイトル（textbox）  */
     @NotBlank(message = "ticketTitle required")
@@ -63,7 +62,7 @@ public class Ticket implements Serializable {
     /** 分類（selectBox）  */
     @Column(nullable = false, unique = false)
     @Enumerated(EnumType.STRING)
-    private TicketCategory category;
+    private TicketCategoryEnum category;
 
     /** チケット説明（textarea）  */
     // TODO:CLOBが良いかも？
@@ -76,8 +75,8 @@ public class Ticket implements Serializable {
     private String correspondence;
 
     /** ステータス（SelectBox） */
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(nullable = false)
     private TicketStatus status;
 
     /** 期限（Date / Time pickers） */

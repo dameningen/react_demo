@@ -29,8 +29,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.example.demo.domain.entity.User;
-import com.example.demo.domain.enums.Roles;
+import com.example.demo.domain.enums.RolesEnum;
+import com.example.demo.domain.enums.TicketStatusEnum;
 import com.example.demo.domain.service.AccountService;
+import com.example.demo.domain.service.TicketStatusService;
 import com.example.demo.domain.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +49,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private TicketStatusService ticketStatusService;
     @Autowired
     private UserService userService;
 
@@ -109,21 +113,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        try {
-            auth
-                    .userDetailsService(accountService)
-                    .passwordEncoder(passwordEncoder());
-            //TODO: propertyでadmin情報は管理しましょう。
-            accountService.registerAdmin("admin", "secret", "admin@localhost");
-            accountService.registerUser("user", "secret", "user@localhost");
-            // TODO：動作確認用にUserテーブルにデータを登録する
-            log.debug("動作確認用にUserテーブルにデータを登録。");
-            User user = new User("1", "admin@localhost", "pass", Roles.ROLE_ADMIN);
-            userService.createOrUpdate(user);
+        auth
+                .userDetailsService(accountService)
+                .passwordEncoder(passwordEncoder());
+        //TODO: propertyでadmin情報は管理しましょう。
+        registerInitialAdminAccount("admin", "secret", "admin@localhost");
+        registerInitialUserAccount("user", "secret", "user@localhost");
 
-        } catch (DataIntegrityViolationException de) {
-            log.info("管理ユーザは既に登録済み。");
-        }
+        // TODO チケットステータスのマスタ情報を登録する
+        registerTicketStatus();
+
+        // TODO：動作確認用にUserテーブルにデータを登録する
+        log.debug("動作確認用にUserテーブルにデータを登録。");
+        User user = new User("1", "admin@localhost", "pass", RolesEnum.ROLE_ADMIN);
+        userService.createOrUpdate(user);
     }
 
     @Bean
@@ -135,6 +138,39 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    /**
+     * 初期管理ユーザをDBに登録する。
+     * @param account 登録対象のアカウント情報
+     */
+    private void registerInitialAdminAccount(String userName, String password, String mailAddress) {
+        try {
+            accountService.registerAdmin(userName, password, mailAddress);
+        } catch (DataIntegrityViolationException de) {
+            log.info("管理ユーザは既に登録済み。");
+        }
+    }
+
+    /**
+     * 初期一般ユーザをDBに登録する。
+     * @param account 登録対象のアカウント情報
+     */
+    private void registerInitialUserAccount(String userName, String password, String mailAddress) {
+        try {
+            accountService.registerUser(userName, password, mailAddress);
+        } catch (DataIntegrityViolationException de) {
+            log.info("一般ユーザは既に登録済み。");
+        }
+    }
+
+    /**
+     * チケットステータスマスタレコードを登録する。
+     */
+    private void registerTicketStatus() {
+        for (TicketStatusEnum st : TicketStatusEnum.values()) {
+            ticketStatusService.registerTicketStatus(st.getCode(), st.getName());
+        }
     }
 
     /**
@@ -151,4 +187,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         res.getWriter().write("{cdode : login failed.}");
         res.getWriter().flush();
     };
+
 }

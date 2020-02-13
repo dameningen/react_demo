@@ -10,7 +10,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum TicketPriority {
+public enum TicketPriorityEnum {
     HIGH(1, "高"), NORMAL(2, "中"), LOW(3, "低");
 
     int code;
