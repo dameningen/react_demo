@@ -120,8 +120,15 @@ public class TicketController extends AbstractController {
             log.debug("■Userアカウント id：" + accountId);
             tickets = ticketService.findByCurrentAuthor(page, count, account);
         }
-        log.debug("取得したチケット：" + tickets.getContent());
+        log.debug("■取得したチケット：" + tickets.getContent());
         response.setData(tickets);
+
+        // TODO 画面側のローディング描画確認用にちょっと遅延させる
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
+
         return ResponseEntity.ok(response);
     }
 

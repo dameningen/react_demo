@@ -4,7 +4,6 @@ import React, { Component } from "react";
 import LoadingOverlay from 'react-loading-overlay';
 import { connect } from 'react-redux';
 import { fetchTicketList } from '../../actions/ticketListActions';
-import { apiCallGet } from '../../libs/common/apiCall';
 
 class TicketList extends Component {
     constructor(props) {
@@ -131,10 +130,10 @@ class TicketList extends Component {
      * チケットIDを指定してチケット詳細ページに遷移する。
      * @param {*} ticketId 
      */
-    async  fowardTicketDetail(ticketId) {
+    async fowardTicketDetail(ticketId) {
         try {
             // ID指定でチケット情報を取得し、チケット詳細画面に遷移する
-            await apiCallGet('http://localhost:8080/api/ticket/' + ticketId);
+            // await apiCallGet('http://localhost:8080/api/ticket/' + ticketId);
             this.props.history.push('/app/ticket/' + ticketId)
 
         } catch (error) {
