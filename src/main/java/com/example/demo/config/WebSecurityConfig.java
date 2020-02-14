@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,16 +27,10 @@ import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.example.demo.domain.entity.User;
-import com.example.demo.domain.enums.RolesEnum;
-import com.example.demo.domain.enums.TicketCategoryEnum;
-import com.example.demo.domain.enums.TicketPriorityEnum;
-import com.example.demo.domain.enums.TicketStatusEnum;
 import com.example.demo.domain.service.AccountService;
 import com.example.demo.domain.service.TicketCategoryService;
 import com.example.demo.domain.service.TicketPriorityService;
 import com.example.demo.domain.service.TicketStatusService;
-import com.example.demo.domain.service.UserService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,8 +46,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AccountService accountService;
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private TicketStatusService ticketStatusService;
@@ -126,23 +117,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth
                 .userDetailsService(accountService)
                 .passwordEncoder(passwordEncoder());
-
-        // TODO 初期レコード登録系処理は別のConfigに移す
-        // TODO: propertyでadmin情報は管理しましょう。
-        registerInitialAdminAccount("admin", "secret", "admin@localhost");
-        registerInitialUserAccount("user", "secret", "user@localhost");
-
-        // チケットステータスのマスタ情報を登録する
-        registerTicketStatus();
-        // チケット優先度のマスタ情報を登録する
-        registerTicketPriority();
-        // チケット分類のマスタ情報を登録する
-        registerTicketCategory();
-
-        // TODO：動作確認用にUserテーブルにデータを登録する
-        log.debug("動作確認用にUserテーブルにデータを登録。");
-        User user = new User("1", "admin@localhost", "pass", RolesEnum.ROLE_ADMIN);
-        userService.createOrUpdate(user);
     }
 
     @Bean
@@ -154,57 +128,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
-    }
-
-    /**
-     * 初期管理ユーザをDBに登録する。
-     * @param account 登録対象のアカウント情報
-     */
-    private void registerInitialAdminAccount(String userName, String password, String mailAddress) {
-        try {
-            accountService.registerAdmin(userName, password, mailAddress);
-        } catch (DataIntegrityViolationException de) {
-            log.info("管理ユーザは既に登録済み。");
-        }
-    }
-
-    /**
-     * 初期一般ユーザをDBに登録する。
-     * @param account 登録対象のアカウント情報
-     */
-    private void registerInitialUserAccount(String userName, String password, String mailAddress) {
-        try {
-            accountService.registerUser(userName, password, mailAddress);
-        } catch (DataIntegrityViolationException de) {
-            log.info("一般ユーザは既に登録済み。");
-        }
-    }
-
-    /**
-     * チケットステータスマスタレコードを登録する。
-     */
-    private void registerTicketStatus() {
-        for (TicketStatusEnum st : TicketStatusEnum.values()) {
-            ticketStatusService.registerTicketStatus(st.getCode(), st.getName());
-        }
-    }
-
-    /**
-     * チケット優先度マスタレコードを登録する。
-     */
-    private void registerTicketPriority() {
-        for (TicketPriorityEnum pr : TicketPriorityEnum.values()) {
-            ticketPriorityService.registerTicketPriority(pr.getCode(), pr.getName());
-        }
-    }
-
-    /**
-     * チケット分類マスタレコードを登録する。
-     */
-    private void registerTicketCategory() {
-        for (TicketCategoryEnum ct : TicketCategoryEnum.values()) {
-            ticketCategoryService.registerTicketCategory(ct.getCode(), ct.getName());
-        }
     }
 
     /**
