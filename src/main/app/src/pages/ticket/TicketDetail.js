@@ -2,13 +2,13 @@
 import DateFnsUtils from '@date-io/date-fns';
 import { Button, CssBaseline, Grid, MenuItem, Paper } from '@material-ui/core';
 import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { format, parseISO } from 'date-fns';
 import ja from 'date-fns/locale/ja';
 import { Select, TextField } from 'final-form-material-ui';
 import React, { Component } from "react";
 import { Field, Form } from 'react-final-form';
 import { connect } from 'react-redux';
-import { fetchTicketDetail } from '../../actions/ticketDetailActions';
-
+import { fetchTicketDetail, updateTicketDetail } from '../../actions/ticketDetailActions';
 
 /**
  * materilal-uiのKeyboardDateTimePickerWrapperラッパー。
@@ -26,7 +26,7 @@ function KeyboardDateTimePickerWrapper(props) {
         ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) &&
         meta.touched;
 
-        
+
     return (
         <KeyboardDateTimePicker
             {...rest}
@@ -45,33 +45,17 @@ function KeyboardDateTimePickerWrapper(props) {
     );
 }
 
-
-const onSubmit = async values => {
-    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-    await sleep(300);
-    window.alert(JSON.stringify(values, 0, 2));
-};
-
+/**
+ * フォームのValidation設定。
+ * @param {*} values 
+ */
 const validate = values => {
     const errors = {};
-    if (!values.firstName) {
-        errors.firstName = 'Required';
-    }
-    if (!values.lastName) {
-        errors.lastName = 'Required';
-    }
-    if (!values.email) {
-        errors.email = 'Required';
+    if (!values.title) {
+        errors.title = '入力必須項目';
     }
     return errors;
 };
-
-const stringifyKeys = values =>
-    Object.keys(values).reduce((result, key) => {
-        result[key] = String(values[key])
-        return result
-    }, {})
-
 
 class TicketDetail extends Component {
 
@@ -82,16 +66,25 @@ class TicketDetail extends Component {
         this.props.dispatch(fetchTicketDetail(ticketId));
     }
 
+    onSubmit = async values => {
+        // const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+        // await sleep(300);
+        // window.alert(JSON.stringify(values, 0, 2));
+        // チケット情報を更新する
+        this.props.dispatch(updateTicketDetail(values));
+    };
+
     render() {
         return (
             <div style={{ padding: 16, margin: 'auto' }}>
                 <CssBaseline />
                 <Form
-                    onSubmit={onSubmit}
+                    onSubmit={this.onSubmit}
                     initialValues={this.props.response.ticketDetailState.items}
                     validate={validate}
                     render={({ handleSubmit, reset, submitting, pristine, values }) => (
                         <form onSubmit={handleSubmit}>
+                            <input type="hidden" value={this.props.response.ticketDetailState.items.id} />
                             <Paper style={{ padding: 16 }}>
                                 <Grid container alignItems="flex-start" spacing={2}>
                                     <Grid item xs={12}>
@@ -106,6 +99,12 @@ class TicketDetail extends Component {
                                         />
                                     </Grid>
                                     <Grid item xs={6}>
+                                        <label>登録日：{this.props.response.ticketDetailState.items.createdAt ? format(parseISO(this.props.response.ticketDetailState.items.createdAt), 'yyyy年MM月dd日 HH:mm', { local: ja }) : null}</label>
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <label>更新日：{this.props.response.ticketDetailState.items.updatedAt ? format(parseISO(this.props.response.ticketDetailState.items.updatedAt), 'yyyy年MM月dd日 HH:mm', { local: ja }) : null}</label>
+                                    </Grid>
+                                    <Grid item xs={4}>
                                         <Field
                                             variant="outlined"
                                             fullWidth
@@ -117,7 +116,20 @@ class TicketDetail extends Component {
                                             <MenuItem value={2}>クレーム</MenuItem>
                                         </Field>
                                     </Grid>
-                                    <Grid item xs={6}>
+                                    <Grid item xs={4}>
+                                        <Field
+                                            variant="outlined"
+                                            fullWidth
+                                            name="priority.code"
+                                            component={Select}
+                                            label="優先度"
+                                            formControlProps={{ fullWidth: true }}>
+                                            <MenuItem value={1}>高</MenuItem>
+                                            <MenuItem value={2}>中</MenuItem>
+                                            <MenuItem value={3}>低</MenuItem>
+                                        </Field>
+                                    </Grid>
+                                    <Grid item xs={4}>
                                         <Field
                                             variant="outlined"
                                             fullWidth
@@ -172,60 +184,39 @@ class TicketDetail extends Component {
                                     <Grid item xs={4}>
                                         <Field
                                             variant="outlined"
-                                            name="author.username"
                                             fullWidth
-                                            required
-                                            component={TextField}
-                                            type="text"
+                                            name="author.id"
+                                            component={Select}
                                             label="登録者"
-                                        />
+                                            formControlProps={{ fullWidth: true }}>
+                                            <MenuItem value={1}>admin</MenuItem>
+                                            <MenuItem value={2}>user</MenuItem>
+                                        </Field>
                                     </Grid>
                                     <Grid item xs={4}>
                                         <Field
                                             variant="outlined"
-                                            name="updater.username"
                                             fullWidth
-                                            required
-                                            component={TextField}
-                                            type="text"
+                                            name="updater.id"
+                                            component={Select}
                                             label="更新者"
-                                        />
+                                            formControlProps={{ fullWidth: true }}>
+                                            <MenuItem value={1}>admin</MenuItem>
+                                            <MenuItem value={2}>user</MenuItem>
+                                        </Field>
                                     </Grid>
                                     <Grid item xs={4}>
                                         <Field
                                             variant="outlined"
-                                            name="assignedUser.username"
                                             fullWidth
-                                            required
-                                            component={TextField}
-                                            type="text"
+                                            name="assignedUser.id"
+                                            component={Select}
                                             label="担当者"
-                                        />
+                                            formControlProps={{ fullWidth: true }}>
+                                            <MenuItem value={1}>admin</MenuItem>
+                                            <MenuItem value={2}>user</MenuItem>
+                                        </Field>
                                     </Grid>
-                                    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ja}>
-                                        <Grid item xs={6}>
-                                            <Field
-                                                variant="outlined"
-                                                name="createdAt"
-                                                component={KeyboardDateTimePickerWrapper}
-                                                fullWidth
-                                                margin="normal"
-                                                label="登録日"
-                                            />
-                                        </Grid>
-                                    </MuiPickersUtilsProvider>
-                                    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ja}>
-                                        <Grid item xs={6}>
-                                            <Field
-                                                variant="outlined"
-                                                name="updatedAt"
-                                                component={KeyboardDateTimePickerWrapper}
-                                                fullWidth
-                                                margin="normal"
-                                                label="更新日"
-                                            />
-                                        </Grid>
-                                    </MuiPickersUtilsProvider>
                                     <Grid item style={{ marginTop: 16 }}>
                                         <Button
                                             type="button"

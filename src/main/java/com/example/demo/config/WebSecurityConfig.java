@@ -99,6 +99,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrfTokenRepository(cookieCsrfTokenRepository)
                 // H2-consoleのパスはCSRF無効にしておく
                 .ignoringAntMatchers("/h2-console/**")
+                .ignoringAntMatchers("/perform_login")
                 .and().headers().frameOptions().sameOrigin();
 
         // RESTful APIを公開する場合、攻撃されやすくなるのでcorsの設定をしておく
@@ -108,7 +109,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 実際は環境ごとにドメインが変わるはずなので、設定で動的に変更でき料にする
         corsConfiguration
                 // TODO ドメインは指定する
-                //.addAllowedOrigin("http://localhost:8080");
+                //.addAllowedOrigin("http://localhost:3000");
                 .addAllowedOrigin("*");
         UrlBasedCorsConfigurationSource corsSource = new UrlBasedCorsConfigurationSource();
         // すべてのパスを対象にする

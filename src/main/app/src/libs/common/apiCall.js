@@ -69,6 +69,7 @@ export const apiCallPost = (endPoint, params = {}) => {
 
     let xsrfToken = getCookie(COOKIE_KEY_XSRF_TOKEN);
     console.log('Cookieから取得したXSRF-TOKEN:' + xsrfToken);
+    console.log('apiCallPost params:' + JSON.stringify(params));
     // リクエストヘッダにCookieから取得したXSRF-TOKENを設定する
     axios.defaults.headers[HEDER_KEY_XSRF_TOKEN] = xsrfToken;
 

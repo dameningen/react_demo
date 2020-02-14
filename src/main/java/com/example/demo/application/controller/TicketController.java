@@ -6,6 +6,8 @@ package com.example.demo.application.controller;
 import java.security.Principal;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -80,6 +82,24 @@ public class TicketController extends AbstractController {
         }
         return ResponseEntity.ok(response);
 
+    }
+
+    @PostMapping("/update")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    public ResponseEntity<Response<Ticket>> update(HttpServletRequest request, @RequestBody Ticket ticket,
+            BindingResult result) {
+        Response<Ticket> response = new Response<Ticket>();
+        try {
+            log.debug("★更新するチケット情報：" + ticket);
+            Ticket ticketPersisted = (Ticket) ticketService.createOrUpdate(ticket);
+            response.setData(ticketPersisted);
+
+        } catch (Exception e) {
+            log.error("想定外の例外が発生。", e);
+            response.getErrors().add(e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping(value = "{id}")

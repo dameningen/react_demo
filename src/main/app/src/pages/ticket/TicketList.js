@@ -1,4 +1,6 @@
 import { Button, CssBaseline } from '@material-ui/core';
+import { format, parseISO } from 'date-fns';
+import ja from 'date-fns/locale/ja';
 import MUIDataTable from "mui-datatables";
 import React, { Component } from "react";
 import LoadingOverlay from 'react-loading-overlay';
@@ -154,12 +156,12 @@ class TicketList extends Component {
                 category: apiResArray[i].category.name,
                 description: apiResArray[i].description,
                 status: apiResArray[i].status.name,
-                deadLine: apiResArray[i].deadLine,
+                deadLine: apiResArray[i].deadLine ? format(parseISO(apiResArray[i].deadLine), 'yyyy年MM月dd日 HH:mm', { local: ja }) : null,
                 author: apiResArray[i].author.username,
                 updater: apiResArray[i].updater.username,
                 assignedUser: apiResArray[i].assignedUser ? apiResArray[i].assignedUser.username : '',
-                createdAt: apiResArray[i].createdAt,
-                updatedAt: apiResArray[i].updatedAt
+                createdAt: apiResArray[i].createdAt ? format(parseISO(apiResArray[i].createdAt), 'yyyy年MM月dd日 HH:mm', { local: ja }) : null,
+                updatedAt: apiResArray[i].updatedAt ? format(parseISO(apiResArray[i].updatedAt), 'yyyy年MM月dd日 HH:mm', { local: ja }) : null,
             };
             ticketList.push(tmpTicket);
         }

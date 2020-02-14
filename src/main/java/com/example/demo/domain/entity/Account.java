@@ -44,6 +44,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = { "password", "tickets" })
+// @JsonIgnoreProperties({ "admin", "manager" })
 // @Data ※@OneToManyなフィールドにGetter/Setterを作成するとエラーになってしまうっぽい？
 public class Account implements UserDetails {
 
@@ -125,6 +126,7 @@ public class Account implements UserDetails {
      * admin権限チェック
      * @return Admin権限有りの場合はtrue、そうでない場合はfalse
      */
+    @JsonIgnore
     public boolean isAdmin() {
         return this.authorities.contains(Authority.ROLE_ADMIN);
     }
@@ -146,6 +148,7 @@ public class Account implements UserDetails {
      * 管理者権限を保有しているか？
      * @return
      */
+    @JsonIgnore
     public boolean isManager() {
         return this.authorities.contains(Authority.ROLE_MANAGER);
     }
@@ -166,6 +169,11 @@ public class Account implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
+        // TODO ロジック要再検討
+        if (this.authorities == null) {
+            return authorities;
+        }
+
         for (Authority authority : this.authorities) {
             authorities.add(new SimpleGrantedAuthority(authority.toString()));
         }
