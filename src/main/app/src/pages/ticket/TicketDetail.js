@@ -26,6 +26,7 @@ function KeyboardDateTimePickerWrapper(props) {
         ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) &&
         meta.touched;
 
+        
     return (
         <KeyboardDateTimePicker
             {...rest}
