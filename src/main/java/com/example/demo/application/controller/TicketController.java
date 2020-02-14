@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.application.resource.Response;
 import com.example.demo.domain.entity.Account;
 import com.example.demo.domain.entity.Ticket;
-import com.example.demo.domain.entity.TicketStatus;
+import com.example.demo.domain.entity.master.TicketStatus;
 import com.example.demo.domain.enums.TicketStatusEnum;
 import com.example.demo.domain.service.TicketService;
 

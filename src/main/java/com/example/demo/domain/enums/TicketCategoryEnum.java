@@ -20,10 +20,10 @@ public enum TicketCategoryEnum {
     /**
      * コード値
      */
-    int code;
+    private int code;
 
     /**
      * 名称
      */
-    String name;
+    private String name;
 };

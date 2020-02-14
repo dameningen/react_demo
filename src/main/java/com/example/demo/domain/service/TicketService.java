@@ -6,6 +6,7 @@ package com.example.demo.domain.service;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.entity.Account;
 import com.example.demo.domain.entity.Ticket;
@@ -14,6 +15,7 @@ import com.example.demo.domain.entity.Ticket;
  * @author dameningen
  *
  */
+@Service
 public interface TicketService {
 
     /**

@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service
-public interface TicketStatusService {
+public interface TicketCategoryService {
 
     /**
-     * チケットステータスを登録する。
+     * チケット分類を登録する。
      * @param code コード
-     * @param name ステータス名
+     * @param name 優先度名称
      */
-    void registerTicketStatus(int code, String name);
+    void registerTicketCategory(int code, String name);
 
 }

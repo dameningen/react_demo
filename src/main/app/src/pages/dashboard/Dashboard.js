@@ -1,11 +1,11 @@
-import React, { useState, Component } from "react";
-import { connect } from 'react-redux';
-import MUIDataTable from "mui-datatables";
 import { Button } from '@material-ui/core';
+import MUIDataTable from "mui-datatables";
+import React, { Component } from "react";
 import LoadingOverlay from 'react-loading-overlay';
-
-import { apiCallPost, apiCallGet } from '../../libs/common/apiCall';
+import { connect } from 'react-redux';
 import { fetchSbRandom } from '../../actions/springBootRandomActions';
+import { apiCallGet, apiCallPost } from '../../libs/common/apiCall';
+
 
 const AUTH_ENDPOINT = 'http://localhost:8080/api/auth';
 const GET_USER_ENDPOINT = 'http://localhost:8080/api/getUserInfo';
@@ -86,9 +86,9 @@ class DashBoard extends Component {
 
   handleCreateTicket() {
     let params = {
-      priority: "HIGH",
+      priority: { code: 1 },
       title: "新規チケット",
-      category: "QUESTION",
+      category: { code: 2 },
       description: "新規チケットの説明何かをいっぱい書いたりする。",
     }
     apiCallPost(TICKET_CREATE_ENDPOINT, params);

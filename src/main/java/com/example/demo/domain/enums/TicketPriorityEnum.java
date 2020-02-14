@@ -13,7 +13,14 @@ import lombok.Getter;
 public enum TicketPriorityEnum {
     HIGH(1, "高"), NORMAL(2, "中"), LOW(3, "低");
 
-    int code;
-    String value;
+    /**
+     * コード値
+     */
+    private int code;
+
+    /**
+     * 名称
+     */
+    private String name;
 
 }

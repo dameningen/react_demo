@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.example.demo.domain.entity;
+package com.example.demo.domain.entity.master;
 
 import java.io.Serializable;
 
@@ -10,23 +10,23 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.example.demo.domain.enums.TicketStatusEnum;
+import com.example.demo.domain.enums.TicketCategoryEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * ステータスのEntity。
+ * チケット分類のEntity。
  * @author dameningen
  *
  */
 @Entity
-@Table(name = "ticketStatus")
+@Table(name = "ticketCategory")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TicketStatus implements Serializable {
+public class TicketCategory implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,14 +39,14 @@ public class TicketStatus implements Serializable {
     private String name;
 
     /**
-     * パラメータのEnumに対応するTicketStatusインスタンスを生成し、返却する。
-     * @param status
+     * パラメータのEnumに対応するTicketCategoryインスタンスを生成し、返却する。
+     * @param category
      * @return
      */
-    public static TicketStatus getTicketStatus(TicketStatusEnum status) {
-        TicketStatus ret = new TicketStatus();
-        ret.setCode(status.getCode());
-        ret.setName(status.getName());
+    public static TicketCategory getTicketPriority(TicketCategoryEnum category) {
+        TicketCategory ret = new TicketCategory();
+        ret.setCode(category.getCode());
+        ret.setName(category.getName());
         return ret;
     }
 }

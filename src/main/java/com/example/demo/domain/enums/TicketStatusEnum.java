@@ -15,7 +15,14 @@ public enum TicketStatusEnum {
     New(1, "新規"), Assigned(2, "割り当て済み"), Resolved(3, "解決済み"),
     Approved(4, "承認済み"), Disapproved(5, "不承認"), Closed(6, "終了");
 
+    /**
+     * コード値
+     */
     private int code;
+
+    /**
+     * 名称
+     */
     private String name;
 
     public static TicketStatusEnum getStatus(String status) {

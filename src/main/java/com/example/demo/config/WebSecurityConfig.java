@@ -30,8 +30,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.example.demo.domain.entity.User;
 import com.example.demo.domain.enums.RolesEnum;
+import com.example.demo.domain.enums.TicketCategoryEnum;
+import com.example.demo.domain.enums.TicketPriorityEnum;
 import com.example.demo.domain.enums.TicketStatusEnum;
 import com.example.demo.domain.service.AccountService;
+import com.example.demo.domain.service.TicketCategoryService;
+import com.example.demo.domain.service.TicketPriorityService;
 import com.example.demo.domain.service.TicketStatusService;
 import com.example.demo.domain.service.UserService;
 
@@ -50,9 +54,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AccountService accountService;
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private TicketStatusService ticketStatusService;
     @Autowired
-    private UserService userService;
+    private TicketPriorityService ticketPriorityService;
+    @Autowired
+    private TicketCategoryService ticketCategoryService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -116,12 +125,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth
                 .userDetailsService(accountService)
                 .passwordEncoder(passwordEncoder());
-        //TODO: propertyでadmin情報は管理しましょう。
+
+        // TODO 初期レコード登録系処理は別のConfigに移す
+        // TODO: propertyでadmin情報は管理しましょう。
         registerInitialAdminAccount("admin", "secret", "admin@localhost");
         registerInitialUserAccount("user", "secret", "user@localhost");
 
-        // TODO チケットステータスのマスタ情報を登録する
+        // チケットステータスのマスタ情報を登録する
         registerTicketStatus();
+        // チケット優先度のマスタ情報を登録する
+        registerTicketPriority();
+        // チケット分類のマスタ情報を登録する
+        registerTicketCategory();
 
         // TODO：動作確認用にUserテーブルにデータを登録する
         log.debug("動作確認用にUserテーブルにデータを登録。");
@@ -170,6 +185,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private void registerTicketStatus() {
         for (TicketStatusEnum st : TicketStatusEnum.values()) {
             ticketStatusService.registerTicketStatus(st.getCode(), st.getName());
+        }
+    }
+
+    /**
+     * チケット優先度マスタレコードを登録する。
+     */
+    private void registerTicketPriority() {
+        for (TicketPriorityEnum pr : TicketPriorityEnum.values()) {
+            ticketPriorityService.registerTicketPriority(pr.getCode(), pr.getName());
+        }
+    }
+
+    /**
+     * チケット分類マスタレコードを登録する。
+     */
+    private void registerTicketCategory() {
+        for (TicketCategoryEnum ct : TicketCategoryEnum.values()) {
+            ticketCategoryService.registerTicketCategory(ct.getCode(), ct.getName());
         }
     }
 

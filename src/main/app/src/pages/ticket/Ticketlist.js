@@ -149,17 +149,17 @@ class TicketList extends Component {
             let tmpTicket =
             {
                 id: apiResArray[i].id,
-                priority: apiResArray[i].priority,
+                priority: apiResArray[i].priority.name,
                 title: apiResArray[i].title,
-                category: apiResArray[i].category,
+                category: apiResArray[i].category.name,
                 description: apiResArray[i].description,
-                status: apiResArray[i].status,
+                status: apiResArray[i].status.name,
                 deadLine: apiResArray[i].deadLine,
                 author: apiResArray[i].author.username,
                 updater: apiResArray[i].updater.username,
                 assignedUser: apiResArray[i].assignedUser ? apiResArray[i].assignedUser.username : '',
                 createdAt: apiResArray[i].createdAt,
-                updatedAt: apiResArray[i].updatedAt,
+                updatedAt: apiResArray[i].updatedAt
             };
             ticketList.push(tmpTicket);
         }

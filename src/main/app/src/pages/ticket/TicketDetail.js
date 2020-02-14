@@ -1,9 +1,9 @@
 // Picker
 import DateFnsUtils from '@date-io/date-fns';
-import { Button, CssBaseline, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, MenuItem, Paper, RadioGroup } from '@material-ui/core';
+import { Button, CssBaseline, Grid, MenuItem, Paper } from '@material-ui/core';
 import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import ja from 'date-fns/locale/ja';
-import { Checkbox, Radio, Select, TextField } from 'final-form-material-ui';
+import { Select, TextField } from 'final-form-material-ui';
 import React, { Component } from "react";
 import { Field, Form } from 'react-final-form';
 import { connect } from 'react-redux';
@@ -65,6 +65,13 @@ const validate = values => {
     return errors;
 };
 
+const stringifyKeys = values =>
+    Object.keys(values).reduce((result, key) => {
+        result[key] = String(values[key])
+        return result
+    }, {})
+
+
 class TicketDetail extends Component {
 
     componentDidMount() {
@@ -88,6 +95,7 @@ class TicketDetail extends Component {
                                 <Grid container alignItems="flex-start" spacing={2}>
                                     <Grid item xs={12}>
                                         <Field
+                                            variant="outlined"
                                             fullWidth
                                             required
                                             name="title"
@@ -98,16 +106,19 @@ class TicketDetail extends Component {
                                     </Grid>
                                     <Grid item xs={6}>
                                         <Field
+                                            variant="outlined"
                                             fullWidth
-                                            required
-                                            name="category"
-                                            component={TextField}
-                                            type="text"
+                                            name="category.code"
+                                            component={Select}
                                             label="分類"
-                                        />
+                                            formControlProps={{ fullWidth: true }}>
+                                            <MenuItem value={1}>質問</MenuItem>
+                                            <MenuItem value={2}>クレーム</MenuItem>
+                                        </Field>
                                     </Grid>
                                     <Grid item xs={6}>
                                         <Field
+                                            variant="outlined"
                                             fullWidth
                                             name="status.code"
                                             component={Select}
@@ -149,6 +160,7 @@ class TicketDetail extends Component {
                                     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ja}>
                                         <Grid item xs={12}>
                                             <Field
+                                                variant="outlined"
                                                 name="deadLine"
                                                 component={KeyboardDateTimePickerWrapper}
                                                 margin="normal"
@@ -158,6 +170,7 @@ class TicketDetail extends Component {
                                     </MuiPickersUtilsProvider>
                                     <Grid item xs={4}>
                                         <Field
+                                            variant="outlined"
                                             name="author.username"
                                             fullWidth
                                             required
@@ -168,6 +181,7 @@ class TicketDetail extends Component {
                                     </Grid>
                                     <Grid item xs={4}>
                                         <Field
+                                            variant="outlined"
                                             name="updater.username"
                                             fullWidth
                                             required
@@ -178,6 +192,7 @@ class TicketDetail extends Component {
                                     </Grid>
                                     <Grid item xs={4}>
                                         <Field
+                                            variant="outlined"
                                             name="assignedUser.username"
                                             fullWidth
                                             required
@@ -189,141 +204,27 @@ class TicketDetail extends Component {
                                     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ja}>
                                         <Grid item xs={6}>
                                             <Field
+                                                variant="outlined"
                                                 name="createdAt"
                                                 component={KeyboardDateTimePickerWrapper}
                                                 fullWidth
                                                 margin="normal"
                                                 label="登録日"
-                                                initialValue={this.props.response.ticketDetailState.items.createdAt}
                                             />
                                         </Grid>
                                     </MuiPickersUtilsProvider>
                                     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ja}>
                                         <Grid item xs={6}>
                                             <Field
+                                                variant="outlined"
                                                 name="updatedAt"
                                                 component={KeyboardDateTimePickerWrapper}
                                                 fullWidth
                                                 margin="normal"
                                                 label="更新日"
-                                                initialValue={this.props.response.ticketDetailState.items.updatedAt}
                                             />
                                         </Grid>
                                     </MuiPickersUtilsProvider>
-                                    <Grid item>
-                                        <FormControl component="fieldset">
-                                            <FormLabel component="legend">Best Stooge</FormLabel>
-                                            <RadioGroup row>
-                                                <FormControlLabel
-                                                    label="Larry"
-                                                    control={
-                                                        <Field
-                                                            name="stooge"
-                                                            component={Radio}
-                                                            type="radio"
-                                                            value="larry"
-                                                        />
-                                                    }
-                                                />
-                                                <FormControlLabel
-                                                    label="Moe"
-                                                    control={
-                                                        <Field
-                                                            name="stooge"
-                                                            component={Radio}
-                                                            type="radio"
-                                                            value="moe"
-                                                        />
-                                                    }
-                                                />
-                                                <FormControlLabel
-                                                    label="Curly"
-                                                    control={
-                                                        <Field
-                                                            name="stooge"
-                                                            component={Radio}
-                                                            type="radio"
-                                                            value="curly"
-                                                        />
-                                                    }
-                                                />
-                                            </RadioGroup>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item>
-                                        <FormControl component="fieldset">
-                                            <FormLabel component="legend">Sauces</FormLabel>
-                                            <FormGroup row>
-                                                <FormControlLabel
-                                                    label="Ketchup"
-                                                    control={
-                                                        <Field
-                                                            name="sauces"
-                                                            component={Checkbox}
-                                                            type="checkbox"
-                                                            value="ketchup"
-                                                        />
-                                                    }
-                                                />
-                                                <FormControlLabel
-                                                    label="Mustard"
-                                                    control={
-                                                        <Field
-                                                            name="sauces"
-                                                            component={Checkbox}
-                                                            type="checkbox"
-                                                            value="mustard"
-                                                        />
-                                                    }
-                                                />
-                                                <FormControlLabel
-                                                    label="Salsa"
-                                                    control={
-                                                        <Field
-                                                            name="sauces"
-                                                            component={Checkbox}
-                                                            type="checkbox"
-                                                            value="salsa"
-                                                        />
-                                                    }
-                                                />
-                                                <FormControlLabel
-                                                    label="Guacamole 🥑"
-                                                    control={
-                                                        <Field
-                                                            name="sauces"
-                                                            component={Checkbox}
-                                                            type="checkbox"
-                                                            value="guacamole"
-                                                        />
-                                                    }
-                                                />
-                                            </FormGroup>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Field
-                                            fullWidth
-                                            name="notes"
-                                            component="textarea"
-                                            multiline
-                                            label="Notes"
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Field
-                                            fullWidth
-                                            name="city"
-                                            component={Select}
-                                            label="Select a City"
-                                            formControlProps={{ fullWidth: true }}>
-                                            <MenuItem value="London">London</MenuItem>
-                                            <MenuItem value="Paris">Paris</MenuItem>
-                                            <MenuItem value="Budapest">
-                                                A city with a very long Name
-                                            </MenuItem>
-                                        </Field>
-                                    </Grid>
                                     <Grid item style={{ marginTop: 16 }}>
                                         <Button
                                             type="button"

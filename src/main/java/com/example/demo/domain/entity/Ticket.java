@@ -8,8 +8,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,8 +20,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 
-import com.example.demo.domain.enums.TicketCategoryEnum;
-import com.example.demo.domain.enums.TicketPriorityEnum;
+import com.example.demo.domain.entity.master.TicketCategory;
+import com.example.demo.domain.entity.master.TicketPriority;
+import com.example.demo.domain.entity.master.TicketStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -50,9 +49,9 @@ public class Ticket implements Serializable {
     private long id;
 
     /** 優先度（SelectBox） */
-    @Column(nullable = false, unique = false)
-    @Enumerated(EnumType.STRING)
-    private TicketPriorityEnum priority;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private TicketPriority priority;
 
     /** チケットタイトル（textbox）  */
     @NotBlank(message = "ticketTitle required")
@@ -60,9 +59,9 @@ public class Ticket implements Serializable {
     private String title;
 
     /** 分類（selectBox）  */
-    @Column(nullable = false, unique = false)
-    @Enumerated(EnumType.STRING)
-    private TicketCategoryEnum category;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private TicketCategory category;
 
     /** チケット説明（textarea）  */
     // TODO:CLOBが良いかも？

@@ -29,6 +29,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -66,22 +68,27 @@ public class Account implements UserDetails {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false, unique = true)
     private String mailAddress;
 
+    @JsonIgnore
     @Column(nullable = false)
     private boolean mailAddressVerified;
 
+    @JsonIgnore
     @Column(nullable = false)
     private boolean enabled;
 
+    @JsonIgnore
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
     // roleは複数管理できるように、Set<>で定義。
+    @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
