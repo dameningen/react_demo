@@ -21,6 +21,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -84,12 +85,13 @@ public class Account implements UserDetails {
     @Column(nullable = false)
     private boolean enabled;
 
-    @JsonIgnore
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedAt;
+
     // roleは複数管理できるように、Set<>で定義。
-    @JsonIgnore
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -115,11 +117,20 @@ public class Account implements UserDetails {
     }
 
     /**
-     * 登録時に、日時を自動セットする
+     * データ新規登録時に登録日と更新日に日時を自動セットする
      */
     @PrePersist
     public void prePersist() {
         this.createdAt = new Date();
+        this.updatedAt = new Date();
+    }
+
+    /**
+     * データ更新時に更新日に日時を自動セットする
+     */
+    @PreUpdate
+    public void preUpdatet() {
+        this.updatedAt = new Date();
     }
 
     /**
@@ -240,6 +251,10 @@ public class Account implements UserDetails {
 
     public Date getCreatedAt() {
         return createdAt;
+    }
+
+    public Date getUpdatedAtAt() {
+        return updatedAt;
     }
 
     public long getId() {

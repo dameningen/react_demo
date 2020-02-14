@@ -66,7 +66,7 @@ public class TicketController extends AbstractController {
 
             // リクエストに設定された情報に新規登録用の情報を付与する
             ticket.setStatus(TicketStatus.getTicketStatus(TicketStatusEnum.New));
-            Account account = getUser(principal, model);
+            Account account = getUser(principal);
             ticket.setAuthor(account);
             ticket.setUpdater(account);
 
@@ -91,7 +91,7 @@ public class TicketController extends AbstractController {
         Response<Ticket> response = new Response<Ticket>();
         try {
             log.debug("★更新するチケット情報：" + ticket);
-            Ticket ticketPersisted = (Ticket) ticketService.createOrUpdate(ticket);
+            Ticket ticketPersisted = ticketService.createOrUpdate(ticket);
             response.setData(ticketPersisted);
 
         } catch (Exception e) {
@@ -131,7 +131,7 @@ public class TicketController extends AbstractController {
 
         Response<Page<Ticket>> response = new Response<Page<Ticket>>();
         Page<Ticket> tickets = null;
-        Account account = getUser(principal, model);
+        Account account = getUser(principal);
         if (account.isAdmin() || account.isManager()) {
             log.debug("■Admin or Managerアカウント");
             // TODO 管理者権限の場合は登録者を見ずにすべてのチケットを取得する
@@ -150,10 +150,9 @@ public class TicketController extends AbstractController {
     /**
      * アカウント情報を取得する。
      * @param principal
-     * @param model
      * @return
      */
-    private Account getUser(Principal principal, Model model) {
+    private Account getUser(Principal principal) {
         Authentication authentication = (Authentication) principal;
         Account account = (Account) authentication.getPrincipal();
         // TODO nullチェック要る？

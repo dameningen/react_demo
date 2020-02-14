@@ -4,6 +4,8 @@ import { Redirect, Route, Switch, withRouter } from "react-router-dom";
 // context
 import { useLayoutState } from "../../context/LayoutContext";
 // pages
+import AccountDetail from "../../pages/account/AccountDetail";
+import AccountList from "../../pages/account/AccountList";
 import Dashboard from "../../pages/dashboard/Dashboard";
 import Icons from "../../pages/icons/Icons";
 import Tables from "../../pages/tables/Tables";
@@ -38,6 +40,8 @@ function Layout(props) {
             <Route path="/app/tables" component={Tables} />
             <Route path="/app/ticketList" component={TicketList} />
             <Route path="/app/ticket/:id" component={TicketDetail} />
+            <Route path="/app/accountList" component={AccountList} />
+            <Route path="/app/account/:id" component={AccountDetail} />
             <Route
               exact
               path="/app/ui"

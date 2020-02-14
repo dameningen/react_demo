@@ -1,5 +1,5 @@
-import React from "react";
 import axios from 'axios';
+import React from "react";
 import { apiCallGet } from '../libs/common/apiCall';
 
 var UserStateContext = React.createContext();
@@ -90,7 +90,7 @@ async function loginUser(dispatch, login, password, history, setIsLoading, setEr
  * localStorageに保存する。
  */
 function isAdminRequest() {
-  return apiCallGet('http://localhost:8080/api/isAdminUser')
+  return apiCallGet('http://localhost:8080/api/account/isAdminUser')
     .then((response) => {
       console.log("★isAdmin:" + JSON.stringify(response));
       sessionStorage.setItem('isAdmin', response.data)

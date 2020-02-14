@@ -28,11 +28,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.example.demo.domain.service.AccountService;
-import com.example.demo.domain.service.TicketCategoryService;
-import com.example.demo.domain.service.TicketPriorityService;
-import com.example.demo.domain.service.TicketStatusService;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Spring Securityの機能設定クラス。
@@ -41,18 +36,10 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Configuration
 @EnableWebSecurity
-@Slf4j
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AccountService accountService;
-
-    @Autowired
-    private TicketStatusService ticketStatusService;
-    @Autowired
-    private TicketPriorityService ticketPriorityService;
-    @Autowired
-    private TicketCategoryService ticketCategoryService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

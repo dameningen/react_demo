@@ -41,14 +41,6 @@ class TicketList extends Component {
             }
         },
         {
-            name: "title",
-            label: "タイトル",
-            options: {
-                filter: true,
-                sort: false,
-            }
-        },
-        {
             name: "description",
             label: "説明",
             options: {

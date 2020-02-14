@@ -35,7 +35,7 @@ const structure = [
     link: "/app/ticketlist",
     icon: <ReportIcon />,
   },
-  { id: 2, label: "アカウント管理", link: "/app/account", icon: <AccountBoxIcon />, isAdminPage: true, },
+  { id: 2, label: "アカウント管理", link: "/app/accountList", icon: <AccountBoxIcon />, isAdminPage: true, },
   {
     id: 3,
     label: "Notifications",

@@ -3,87 +3,71 @@
  */
 package com.example.demo.domain.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import com.example.demo.domain.entity.Account;
-import com.example.demo.domain.repository.AccountRepository;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
- * 認証処理。
+ * アカウント関連サービス。
  * @author dameningen
  *
  */
 @Service
-@Slf4j
-public class AccountService implements UserDetailsService {
-
-    @Autowired
-    private AccountRepository repository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Override
-    public UserDetails loadUserByUsername(String mailAddress) throws UsernameNotFoundException {
-        if (StringUtils.isEmpty(mailAddress)) {
-            log.warn("■mailAddressが空");
-            throw new UsernameNotFoundException("mailAddress is empty");
-        }
-
-        Account user = repository.findByMailAddress(mailAddress);
-        if (user == null) {
-            log.warn("■該当User無し（mailAddress）：" + mailAddress);
-            throw new UsernameNotFoundException("User not found: " + mailAddress);
-        }
-
-        return user;
-    }
+public interface AccountService extends UserDetailsService {
 
     /**
-     * adminを登録するメソッド。
+     * アカウントIDを指定してチケット情報を取得する。
+     * @param id アカウントID
+     * @return 対応するアカウントインスタンス
+     */
+    Optional<Account> findById(long id);
+
+    /**
+     * アカウント一覧を取得する。
+     * @param page
+     * @param count
+     * @return
+     */
+    Page<Account> getAccountList(int page, int count);
+
+    /**
+     * アカウント情報を更新する。
+     * @param account
+     * @return
+     */
+    @Transactional
+    Account createOrUpdate(Account account);
+
+    /**
+     * 管理者権限ユーザを登録する。
      * @param username
      * @param password
      * @param mailAddress
      */
     @Transactional
-    public void registerAdmin(String username, String password, String mailAddress) {
-        Account user = new Account(username, passwordEncoder.encode(password), mailAddress);
-        user.setAdmin(true);
-        repository.save(user);
-    }
+    void registerAdmin(String username, String password, String mailAddress);
 
     /**
-     * 管理者を登録するメソッド。
+     * マネージャ権限ユーザを登録する。
      * @param username
      * @param password
      * @param mailAddress
      */
     @Transactional
-    public void registerManager(String username, String password, String mailAddress) {
-        Account user = new Account(username, passwordEncoder.encode(password), mailAddress);
-        user.setManager(true);
-        repository.save(user);
-    }
+    void registerManager(String username, String password, String mailAddress);
 
     /**
-     * 一般ユーザを登録するメソッド。
+     * 一般ユーザを登録する。
      * @param username
      * @param password
      * @param mailAddress
      */
     @Transactional
-    public void registerUser(String username, String password, String mailAddress) {
-        Account user = new Account(username, passwordEncoder.encode(password), mailAddress);
-        repository.save(user);
-    }
+    void registerUser(String username, String password, String mailAddress);
 
 }

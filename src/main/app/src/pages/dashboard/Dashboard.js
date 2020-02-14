@@ -6,14 +6,15 @@ import { connect } from 'react-redux';
 import { fetchSbRandom } from '../../actions/springBootRandomActions';
 import { apiCallGet, apiCallPost } from '../../libs/common/apiCall';
 
-
 const AUTH_ENDPOINT = 'http://localhost:8080/api/auth';
-const GET_USER_ENDPOINT = 'http://localhost:8080/api/getUserInfo';
-const IS_ADMIN_ENDPOINT = 'http://localhost:8080/api/isAdminUser';
+const GET_ACCOUNT_INFO_ENDPOINT = 'http://localhost:8080/api/account/getCurrentAccountInfo';
+const IS_ADMIN_ENDPOINT = 'http://localhost:8080/api/account/isAdminUser';
 const USESR_CREATE_ENDPOINT = 'http://localhost:8080/api/user/create';
 const TICKET_CREATE_ENDPOINT = 'http://localhost:8080/api/ticket/create';
 
 const TICKET_LIST_ENDPOINT = 'http://localhost:8080/api/ticket/0/10';
+const ACCOUNT_LIST_ENDPOINT = 'http://localhost:8080/api/account/0/10';
+const ACCOUNT_ID_ENDPOINT = 'http://localhost:8080/api/account/1';
 
 /**
  * テーブル表示用のカラム設定値
@@ -51,6 +52,7 @@ class DashBoard extends Component {
     super(props);
   }
 
+
   componentDidMount() {
     this.props.dispatch(fetchSbRandom());
   }
@@ -78,7 +80,7 @@ class DashBoard extends Component {
   }
 
   handleGetUser() {
-    apiCallGet(GET_USER_ENDPOINT);
+    apiCallGet(GET_ACCOUNT_INFO_ENDPOINT);
   }
 
   handleIsAdmin() {
@@ -98,6 +100,14 @@ class DashBoard extends Component {
 
   handleGetTicketList() {
     apiCallGet(TICKET_LIST_ENDPOINT);
+  }
+
+  handleGetAccountList() {
+    apiCallGet(ACCOUNT_LIST_ENDPOINT);
+  }
+
+  handleGetAccountInfo() {
+    apiCallGet(ACCOUNT_ID_ENDPOINT);
   }
 
   render() {
@@ -134,7 +144,7 @@ class DashBoard extends Component {
             onClick={() => this.handleAddUser()}
           />
           <Button variant="contained" onClick={() => this.handleGetUser()}>
-            ユーザー情報取得
+            アカウント情報取得
           </Button>
           <Button variant="contained" color="primary" onClick={() => this.handleIsAdmin()}>
             ユーザー権限判定
@@ -144,6 +154,12 @@ class DashBoard extends Component {
           </Button>
           <Button variant="contained" color="primary" onClick={() => this.handleGetTicketList()}>
             チケットリスト取得
+          </Button>
+          <Button variant="contained" color="primary" onClick={() => this.handleGetAccountList()}>
+            アカウントリスト取得
+          </Button>
+          <Button variant="contained" color="primary" onClick={() => this.handleGetAccountInfo()}>
+            アカウント情報取得
           </Button>
         </LoadingOverlay>
       </div>
