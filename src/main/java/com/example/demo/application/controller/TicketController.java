@@ -52,7 +52,7 @@ public class TicketController extends AbstractController {
      * @return
      */
     @PostMapping("/create")
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<Response<Ticket>> create(Principal principal, Model model, @RequestBody Ticket ticket,
             BindingResult result) {
 

@@ -25,6 +25,7 @@ class AccountList extends Component {
       console.error(error.stack || error);
     }
   }
+
   columns = [
     {
       name: "id",

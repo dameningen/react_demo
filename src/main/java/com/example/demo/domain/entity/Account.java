@@ -3,12 +3,11 @@
  */
 package com.example.demo.domain.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -31,6 +30,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -57,7 +58,7 @@ public class Account implements UserDetails {
      * @author dameningen
      *
      */
-    public enum Authority {
+    public enum Authority implements Serializable {
         ROLE_USER, ROLE_MANAGER, ROLE_ADMIN
     };
 
@@ -70,7 +71,7 @@ public class Account implements UserDetails {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @JsonIgnore
+    @JsonProperty(access = Access.WRITE_ONLY)
     @Column(nullable = false)
     private String password;
 
@@ -95,7 +96,7 @@ public class Account implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Set<Authority> authorities;
+    private List<Authority> authorities;
 
     @OneToMany(mappedBy = "assignedUser")
     private List<Ticket> tickets;
@@ -113,7 +114,8 @@ public class Account implements UserDetails {
         this.mailAddress = mailAddress;
         this.mailAddressVerified = false;
         this.enabled = true;
-        this.authorities = EnumSet.of(Authority.ROLE_USER);
+        this.authorities = new ArrayList<>();
+        this.authorities.add(Authority.ROLE_USER);
     }
 
     /**
@@ -210,6 +212,7 @@ public class Account implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return true;
     }
@@ -219,16 +222,19 @@ public class Account implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
@@ -241,6 +247,7 @@ public class Account implements UserDetails {
         this.mailAddress = mailAddress;
     }
 
+    @JsonIgnore
     public boolean isMailAddressVerified() {
         return mailAddressVerified;
     }
@@ -253,7 +260,7 @@ public class Account implements UserDetails {
         return createdAt;
     }
 
-    public Date getUpdatedAtAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 

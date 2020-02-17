@@ -21,6 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,6 +51,8 @@ public class AuthController extends AbstractController {
 
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -140,10 +143,11 @@ public class AuthController extends AbstractController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Response<Account>> update(
             HttpServletRequest request, @RequestBody Account account, BindingResult result) {
+        log.debug("★更新するアカウント情報：" + account);
 
         Response<Account> response = new Response<Account>();
         try {
-            log.debug("★更新するアカウント情報：" + account);
+            account.setPassword(passwordEncoder.encode(account.getPassword()));
             Account accountPersisted = accountService.createOrUpdate(account);
             response.setData(accountPersisted);
 
