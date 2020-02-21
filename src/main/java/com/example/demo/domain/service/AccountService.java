@@ -70,12 +70,4 @@ public interface AccountService extends UserDetailsService {
     @Transactional
     void registerUser(String username, String password, String mailAddress);
 
-    /**
-     * ユーザ権限を登録する。
-     * @param code コード値
-     * @param name 権限名称
-     */
-    @Transactional
-    void registerAuthority(int code, String name);
-
 }
