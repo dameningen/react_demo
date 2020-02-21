@@ -1,31 +1,14 @@
-import React, { useState } from "react";
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Menu,
-  MenuItem
-} from "@material-ui/core";
-import {
-  Menu as MenuIcon,
-  Person as AccountIcon,
-  ArrowBack as ArrowBackIcon,
-} from "@material-ui/icons";
+import { AppBar, IconButton, Menu, MenuItem, Toolbar } from "@material-ui/core";
+import { ArrowBack as ArrowBackIcon, Menu as MenuIcon, Person as AccountIcon } from "@material-ui/icons";
 import classNames from "classnames";
-
+import React, { useState } from "react";
+// context
+import { toggleSidebar, useLayoutDispatch, useLayoutState } from "../../context/LayoutContext";
+import { signOut, useUserDispatch } from "../../context/UserContext";
+// components
+import { Typography } from "../Wrappers/Wrappers";
 // styles
 import useStyles from "./styles";
-
-// components
-import { Badge, Typography, Button } from "../Wrappers/Wrappers";
-
-// context
-import {
-  useLayoutState,
-  useLayoutDispatch,
-  toggleSidebar,
-} from "../../context/LayoutContext";
-import { useUserDispatch, signOut } from "../../context/UserContext";
 
 export default function Header(props) {
   var classes = useStyles();
@@ -70,7 +53,7 @@ export default function Header(props) {
             )}
         </IconButton>
         <Typography variant="h6" weight="medium" className={classes.logotype}>
-          React Material Admin
+          ヘルプデスク
         </Typography>
         <div className={classes.grow} />
         <IconButton
@@ -95,14 +78,6 @@ export default function Header(props) {
             <Typography variant="h4" weight="medium">
               John Smith
             </Typography>
-            <Typography
-              className={classes.profileMenuLink}
-              component="a"
-              color="primary"
-              href="https://flatlogic.com"
-            >
-              Flalogic.com
-            </Typography>
           </div>
           <MenuItem
             className={classNames(
@@ -112,29 +87,13 @@ export default function Header(props) {
           >
             <AccountIcon className={classes.profileMenuIcon} /> Profile
           </MenuItem>
-          <MenuItem
-            className={classNames(
-              classes.profileMenuItem,
-              classes.headerMenuItem,
-            )}
-          >
-            <AccountIcon className={classes.profileMenuIcon} /> Tasks
-          </MenuItem>
-          <MenuItem
-            className={classNames(
-              classes.profileMenuItem,
-              classes.headerMenuItem,
-            )}
-          >
-            <AccountIcon className={classes.profileMenuIcon} /> Messages
-          </MenuItem>
           <div className={classes.profileMenuUser}>
             <Typography
               className={classes.profileMenuLink}
               color="primary"
               onClick={() => signOut(userDispatch, props.history)}
             >
-              Sign Out
+              ログアウト
             </Typography>
           </div>
         </Menu>

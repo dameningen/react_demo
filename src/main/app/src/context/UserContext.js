@@ -36,6 +36,7 @@ function useUserState() {
   if (context === undefined) {
     throw new Error("useUserState must be used within a UserProvider");
   }
+  console.log('useUserState context:' + JSON.stringify(context));
   return context;
 }
 

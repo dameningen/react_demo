@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import LoadingOverlay from 'react-loading-overlay';
 import { connect } from 'react-redux';
 import { fetchSbRandom } from '../../actions/springBootRandomActions';
+import PageTitle from "../../components/PageTitle/PageTitle";
 import { apiCallGet, apiCallPost } from '../../libs/common/apiCall';
 
 const AUTH_ENDPOINT = 'http://localhost:8080/api/auth';
@@ -114,6 +115,7 @@ class DashBoard extends Component {
 
     return (
       <div className="app">
+        <PageTitle title="ダッシュボード" />
         <LoadingOverlay
           active={this.props.response.sbRandomState.isLoading}
           spinner

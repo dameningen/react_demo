@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import LoadingOverlay from 'react-loading-overlay';
 import { connect } from 'react-redux';
 import { fetchAccountList } from '../../actions/accountListActions';
+import { convDateTIme } from "../../libs/common/dateUtil";
 
 class AccountList extends Component {
 
@@ -15,15 +16,9 @@ class AccountList extends Component {
  * アカウントIDを指定してアカウント詳細ページに遷移する。
  * @param {*} accountId
  */
-  async fowardAccountDetail(accountId) {
-    try {
-      // ID指定でアカウント情報を取得し、アカウント詳細画面に遷移する
-      // await apiCallGet('http://localhost:8080/api/account/' + accountId);
-      this.props.history.push('/app/account/' + accountId)
-
-    } catch (error) {
-      console.error(error.stack || error);
-    }
+  fowardAccountDetail(accountId) {
+    // ID指定でアカウント情報を取得し、アカウント詳細画面に遷移する
+    this.props.history.push('/app/account/' + accountId)
   }
 
   columns = [
@@ -80,7 +75,14 @@ class AccountList extends Component {
       options: {
         filter: true,
         sort: false,
-      }
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <>
+              {convDateTIme(value)}
+            </>
+          );
+        }
+      },
     },
     {
       name: "updatedAt",
@@ -88,7 +90,14 @@ class AccountList extends Component {
       options: {
         filter: true,
         sort: false,
-      }
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <>
+              {convDateTIme(value)}
+            </>
+          );
+        }
+      },
     },
     {
       name: "Actions",
