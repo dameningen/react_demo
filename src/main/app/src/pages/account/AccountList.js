@@ -48,7 +48,7 @@ class AccountList extends Component {
       }
     },
     {
-      name: "authorities",
+      name: "roles",
       label: "権限",
       options: {
         filter: true,
@@ -57,9 +57,9 @@ class AccountList extends Component {
           let authorities = '';
           for (let i = 0; i < value.length; i++) {
             if (i === 0) {
-              authorities = value[i].authority;
+              authorities = value[i];
             } else {
-              authorities = authorities + ', ' + value[i].authority;
+              authorities = authorities + ', ' + value[i];
             }
           }
           return (

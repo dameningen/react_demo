@@ -17,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.example.demo.domain.entity.Account;
+import com.example.demo.domain.entity.master.Authority;
 import com.example.demo.domain.repository.AccountRepository;
+import com.example.demo.domain.repository.AuthorityRepository;
 import com.example.demo.domain.service.AccountService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private AccountRepository repository;
+
+    @Autowired
+    private AuthorityRepository authRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -121,6 +126,15 @@ public class AccountServiceImpl implements AccountService {
     public void registerUser(String username, String password, String mailAddress) {
         Account user = new Account(username, passwordEncoder.encode(password), mailAddress);
         repository.save(user);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void registerAuthority(int code, String name) {
+        Authority authority = new Authority(code, name);
+        authRepository.save(authority);
     }
 
 }

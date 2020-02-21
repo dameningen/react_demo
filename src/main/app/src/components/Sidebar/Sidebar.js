@@ -17,16 +17,20 @@ const structure = [
   { id: 0, label: "ダッシュボード", link: "/app/dashboard", icon: <HomeIcon /> },
   {
     id: 1,
-    label: "チケット一覧",
-    link: "/app/ticketlist",
+    label: "チケット管理",
     icon: <ReportIcon />,
+    children: [
+      { label: "チケット一覧", link: "/app/ticketlist" },
+    ],
   },
   {
     id: 2,
     label: "アカウント管理",
-    link: "/app/accountList",
     icon: <AccountBoxIcon />,
     isAdminPage: true,
+    children: [
+      { label: "アカウント一覧", link: "/app/accountList" },
+    ],
   },
   {
     id: 3,

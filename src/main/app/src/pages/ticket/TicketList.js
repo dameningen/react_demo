@@ -213,7 +213,7 @@ class TicketList extends Component {
     render() {
         return (
             <>
-                <PageTitle title="アカウント一覧" />
+                <PageTitle title="チケット一覧" />
                 <div style={{ padding: 16, margin: 'auto', }}>
                     <CssBaseline />
                     <LoadingOverlay

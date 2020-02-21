@@ -14,7 +14,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum TicketCategoryEnum {
+public enum TicketCategoryEnum implements Codes {
     QUESTION(1, "質問"), CLAIM(2, "クレーム");
 
     /**

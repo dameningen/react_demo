@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
+import com.example.demo.domain.enums.AuthorityEnum;
 import com.example.demo.domain.enums.TicketCategoryEnum;
 import com.example.demo.domain.enums.TicketPriorityEnum;
 import com.example.demo.domain.enums.TicketStatusEnum;
@@ -44,7 +45,9 @@ public class DBInitializer {
     @PostConstruct
     public void masterRecordInsert() {
 
-        // TODO 初期レコード登録系処理は別のConfigに移す
+        // ユーザー権限のマスタ情報を登録する
+        // registerAuthority();
+
         // TODO: propertyでadmin情報は管理しましょう。
         registerInitialAdminAccount("admin", "secret", "admin@localhost");
         registerInitialUserAccount("user", "secret", "user@localhost");
@@ -55,6 +58,15 @@ public class DBInitializer {
         registerTicketPriority();
         // チケット分類のマスタ情報を登録する
         registerTicketCategory();
+    }
+
+    /**
+     * ユーザー権限マスタレコードを登録する。
+     */
+    private void registerAuthority() {
+        for (AuthorityEnum st : AuthorityEnum.values()) {
+            accountService.registerAuthority(st.getCode(), st.getName());
+        }
     }
 
     /**

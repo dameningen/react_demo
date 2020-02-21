@@ -65,7 +65,7 @@ public class TicketController extends AbstractController {
             }
 
             // リクエストに設定された情報に新規登録用の情報を付与する
-            ticket.setStatus(TicketStatus.getTicketStatus(TicketStatusEnum.New));
+            ticket.setStatus(new TicketStatus(TicketStatusEnum.New));
             Account account = getUser(principal);
             ticket.setAuthor(account);
             ticket.setUpdater(account);

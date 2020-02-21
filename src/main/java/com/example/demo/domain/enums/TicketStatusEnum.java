@@ -10,7 +10,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum TicketStatusEnum {
+public enum TicketStatusEnum implements Codes {
 
     New(1, "新規"), Assigned(2, "割り当て済み"), Resolved(3, "解決済み"),
     Approved(4, "承認済み"), Disapproved(5, "不承認"), Closed(6, "終了");

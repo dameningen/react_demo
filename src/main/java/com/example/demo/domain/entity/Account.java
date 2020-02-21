@@ -18,7 +18,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -34,6 +33,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -45,9 +45,9 @@ import lombok.ToString;
 @Table(name = "accounts")
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = { "password", "tickets" })
+@ToString(exclude = { "password" })
 // @JsonIgnoreProperties({ "admin", "manager" })
-// @Data ※@OneToManyなフィールドにGetter/Setterを作成するとエラーになってしまうっぽい？
+@Data
 public class Account implements UserDetails {
 
     private static final long serialVersionUID = 1L;
@@ -92,14 +92,10 @@ public class Account implements UserDetails {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    // roleは複数管理できるように、Set<>で定義。
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private List<Authority> authorities;
-
-    @OneToMany(mappedBy = "assignedUser")
-    private List<Ticket> tickets;
+    private List<Authority> roles;
 
     /**
      * コンストラクタ。
@@ -114,8 +110,8 @@ public class Account implements UserDetails {
         this.mailAddress = mailAddress;
         this.mailAddressVerified = false;
         this.enabled = true;
-        this.authorities = new ArrayList<>();
-        this.authorities.add(Authority.ROLE_USER);
+        this.roles = new ArrayList<>();
+        this.roles.add(Authority.ROLE_USER);
     }
 
     /**
@@ -141,7 +137,7 @@ public class Account implements UserDetails {
      */
     @JsonIgnore
     public boolean isAdmin() {
-        return this.authorities.contains(Authority.ROLE_ADMIN);
+        return this.roles.contains(Authority.ROLE_ADMIN);
     }
 
     /**
@@ -150,10 +146,10 @@ public class Account implements UserDetails {
      */
     public void setAdmin(boolean isAdmin) {
         if (isAdmin) {
-            this.authorities.add(Authority.ROLE_MANAGER);
-            this.authorities.add(Authority.ROLE_ADMIN);
+            this.roles.add(Authority.ROLE_MANAGER);
+            this.roles.add(Authority.ROLE_ADMIN);
         } else {
-            this.authorities.remove(Authority.ROLE_ADMIN);
+            this.roles.remove(Authority.ROLE_ADMIN);
         }
     }
 
@@ -163,7 +159,7 @@ public class Account implements UserDetails {
      */
     @JsonIgnore
     public boolean isManager() {
-        return this.authorities.contains(Authority.ROLE_MANAGER);
+        return this.roles.contains(Authority.ROLE_MANAGER);
     }
 
     /**
@@ -172,104 +168,69 @@ public class Account implements UserDetails {
      */
     public void setManager(boolean isManager) {
         if (isManager) {
-            this.authorities.add(Authority.ROLE_MANAGER);
+            this.roles.add(Authority.ROLE_MANAGER);
         } else {
-            this.authorities.remove(Authority.ROLE_MANAGER);
-            this.authorities.remove(Authority.ROLE_ADMIN);
+            this.roles.remove(Authority.ROLE_MANAGER);
+            this.roles.remove(Authority.ROLE_ADMIN);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         // TODO ロジック要再検討
-        if (this.authorities == null) {
+        if (this.roles == null) {
             return authorities;
         }
 
-        for (Authority authority : this.authorities) {
+        for (Authority authority : this.roles) {
             authorities.add(new SimpleGrantedAuthority(authority.toString()));
         }
         return authorities;
-    }
-
-    @Override
-    public String getPassword() {
-        return this.password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    @Override
-    public String getUsername() {
-        return this.username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @JsonIgnore
     public boolean isEnabled() {
         return true;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
-    }
-
-    public String getMailAddress() {
-        return mailAddress;
-    }
-
-    public void setMailAddress(String mailAddress) {
-        this.mailAddress = mailAddress;
-    }
-
-    @JsonIgnore
-    public boolean isMailAddressVerified() {
-        return mailAddressVerified;
-    }
-
-    public void setMailAddressVerified(boolean mailAddressVerified) {
-        this.mailAddressVerified = mailAddressVerified;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
 }

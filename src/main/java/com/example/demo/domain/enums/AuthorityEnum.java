@@ -4,14 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * チケット優先度。
+ * 権限。<br>
+ * 一般ユーザ、マネージャ、システム管理者の3種類。
  * @author dameningen
  *
  */
 @AllArgsConstructor
 @Getter
-public enum TicketPriorityEnum implements Codes {
-    HIGH(1, "高"), NORMAL(2, "中"), LOW(3, "低");
+public enum AuthorityEnum implements Codes {
+    ROLE_ADMIN(1, "ROLE_ADMIN"), ROLE_USER(2, "ROLE_USER"), ROLE_MANAGER(3, "ROLE_MANAGER");
 
     /**
      * コード値
@@ -23,4 +24,4 @@ public enum TicketPriorityEnum implements Codes {
      */
     private String name;
 
-}
+};

@@ -46,8 +46,9 @@ class AccountDetail extends Component {
 
     onSubmit = async values => {
         // TODO 一旦権限を無視
-        delete values.authorities;
-        values.authorities = ['ROLE_ADMIN', 'ROLE_USER'];
+        // delete values.authorities;
+        //values.authorities = ['ROLE_ADMIN', 'ROLE_USER'];
+        //values.authorities = [1, 2];
 
         // アカウント情報を更新する
         this.props.dispatch(updateAccountDetail(values));
@@ -123,7 +124,7 @@ class AccountDetail extends Component {
                                                         label="管理者"
                                                         control={
                                                             <Field
-                                                                name="authorities"
+                                                                name="roles"
                                                                 component={Checkbox}
                                                                 type="checkbox"
                                                                 value="ROLE_ADMIN"
@@ -135,7 +136,7 @@ class AccountDetail extends Component {
                                                         label="マネージャー"
                                                         control={
                                                             <Field
-                                                                name="authorities"
+                                                                name="roles"
                                                                 component={Checkbox}
                                                                 type="checkbox"
                                                                 value="ROLE_MANAGER"
@@ -146,7 +147,7 @@ class AccountDetail extends Component {
                                                         label="一般ユーザ"
                                                         control={
                                                             <Field
-                                                                name="authorities"
+                                                                name="roles"
                                                                 component={Checkbox}
                                                                 type="checkbox"
                                                                 value="ROLE_USER"
