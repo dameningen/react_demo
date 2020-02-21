@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import LoadingOverlay from 'react-loading-overlay';
 import { connect } from 'react-redux';
 import { fetchAccountList } from '../../actions/accountListActions';
+import PageTitle from "../../components/PageTitle/PageTitle";
 import { convDateTIme } from "../../libs/common/dateUtil";
 
 class AccountList extends Component {
@@ -119,6 +120,7 @@ class AccountList extends Component {
 
     return (
       <div className="app">
+        <PageTitle title="アカウント一覧" />
         <LoadingOverlay
           active={this.props.response.accountListState.isLoading}
           spinner

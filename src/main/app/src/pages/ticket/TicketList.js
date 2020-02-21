@@ -4,8 +4,21 @@ import React, { Component } from "react";
 import LoadingOverlay from 'react-loading-overlay';
 import { connect } from 'react-redux';
 import { fetchTicketList } from '../../actions/ticketListActions';
+import PageTitle from "../../components/PageTitle/PageTitle";
 import { convDateTIme } from "../../libs/common/dateUtil";
 
+/**
+ * 
+ * @param {*} value
+ * @param {*} property 
+ */
+const getPropVal = (value, property) => {
+    let retVal = '';
+    if (value) {
+        retVal = value[property];
+    }
+    return retVal
+}
 
 class TicketList extends Component {
     constructor(props) {
@@ -25,11 +38,33 @@ class TicketList extends Component {
             }
         },
         {
+            name: "category",
+            label: "分類",
+            options: {
+                filter: true,
+                sort: false,
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <>
+                            {getPropVal(value, 'name')}
+                        </>
+                    );
+                }
+            }
+        },
+        {
             name: "priority",
             label: "優先度",
             options: {
                 filter: true,
                 sort: false,
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <>
+                            {getPropVal(value, 'name')}
+                        </>
+                    );
+                }
             }
         },
         {
@@ -54,6 +89,13 @@ class TicketList extends Component {
             options: {
                 filter: true,
                 sort: false,
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <>
+                            {getPropVal(value, 'name')}
+                        </>
+                    );
+                }
             }
         },
         {
@@ -70,6 +112,13 @@ class TicketList extends Component {
             options: {
                 filter: true,
                 sort: false,
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <>
+                            {getPropVal(value, 'username')}
+                        </>
+                    );
+                }
             }
         },
         {
@@ -78,6 +127,13 @@ class TicketList extends Component {
             options: {
                 filter: true,
                 sort: false,
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <>
+                            {getPropVal(value, 'username')}
+                        </>
+                    );
+                }
             }
         },
         {
@@ -86,6 +142,13 @@ class TicketList extends Component {
             options: {
                 filter: true,
                 sort: false,
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <>
+                            {getPropVal(value, 'username')}
+                        </>
+                    );
+                }
             }
         },
         {
@@ -93,7 +156,14 @@ class TicketList extends Component {
             label: "登録日",
             options: {
                 filter: true,
-                sort: false,
+                sort: true,
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <>
+                            {convDateTIme(value)}
+                        </>
+                    );
+                }
             }
         },
         {
@@ -101,7 +171,14 @@ class TicketList extends Component {
             label: "更新日",
             options: {
                 filter: true,
-                sort: false,
+                sort: true,
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <>
+                            {convDateTIme(value)}
+                        </>
+                    );
+                }
             }
         },
         {
@@ -124,42 +201,10 @@ class TicketList extends Component {
      * チケットIDを指定してチケット詳細ページに遷移する。
      * @param {*} ticketId 
      */
-    async fowardTicketDetail(ticketId) {
-        try {
-            // ID指定でチケット情報を取得し、チケット詳細画面に遷移する
-            // await apiCallGet('http://localhost:8080/api/ticket/' + ticketId);
-            this.props.history.push('/app/ticket/' + ticketId)
-
-        } catch (error) {
-            console.error(error.stack || error);
-        }
+    fowardTicketDetail(ticketId) {
+        // ID指定でチケット情報を取得し、チケット詳細画面に遷移する
+        this.props.history.push('/app/ticket/' + ticketId)
     }
-
-    dataConvert(data) {
-        let ticketList = [];
-        let apiResArray = data;
-        console.log("★チケットリスト数：" + apiResArray.length);
-        for (let i = 0; i < apiResArray.length; i++) {
-            let tmpTicket =
-            {
-                id: apiResArray[i].id,
-                priority: apiResArray[i].priority.name,
-                title: apiResArray[i].title,
-                category: apiResArray[i].category.name,
-                description: apiResArray[i].description,
-                status: apiResArray[i].status.name,
-                deadLine: convDateTIme(apiResArray[i].deadLine),
-                author: apiResArray[i].author.username,
-                updater: apiResArray[i].updater.username,
-                assignedUser: apiResArray[i].assignedUser ? apiResArray[i].assignedUser.username : '',
-                createdAt: convDateTIme(apiResArray[i].createdAt),
-                updatedAt: convDateTIme(apiResArray[i].updatedAt),
-            };
-            ticketList.push(tmpTicket);
-        }
-        return ticketList;
-    }
-
 
     componentDidMount() {
         this.props.dispatch(fetchTicketList());
@@ -167,28 +212,33 @@ class TicketList extends Component {
 
     render() {
         return (
-            <div style={{ padding: 16, margin: 'auto', }}>
-                <CssBaseline />
-                <LoadingOverlay
-                    active={this.props.response.ticketListState.isLoading}
-                    spinner
-                    text='Loading ...'
-                >
-                    <MUIDataTable
-                        title="チケット一覧"
-                        data={this.dataConvert(this.props.response.ticketListState.items)}
-                        columns={this.columns}
-                        options={
-                            {
-                                filterType: "checkbox",
-                            }
-                        } />
-                </LoadingOverlay>
-            </div>
+            <>
+                <PageTitle title="アカウント一覧" />
+                <div style={{ padding: 16, margin: 'auto', }}>
+                    <CssBaseline />
+                    <LoadingOverlay
+                        active={this.props.val.isLoading}
+                        spinner
+                        text='Loading ...'
+                    >
+                        <MUIDataTable
+                            title="チケット一覧"
+                            data={this.props.val}
+                            columns={this.columns}
+                            options={
+                                {
+                                    filterType: "checkbox",
+                                }
+                            } />
+                    </LoadingOverlay>
+                </div>
+            </>
         );
     }
 }
 
-const mapStateToProps = (response) => ({ response });
+const mapStateToProps = (state) => {
+    return { val: state.ticketListState.items };
+};
 
 export default connect(mapStateToProps)(TicketList);
