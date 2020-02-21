@@ -48,6 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/*.*", "/static/**", "/#/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/auth").permitAll()
+                .antMatchers(HttpMethod.POST, "/perform_login").permitAll()
                 // .antMatchers(HttpMethod.POST, "/api/user/create").permitAll()
                 .anyRequest()
                 .authenticated()
@@ -84,11 +85,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
         corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
+        corsConfiguration.setAllowCredentials(true);
         // 実際は環境ごとにドメインが変わるはずなので、設定で動的に変更でき料にする
         corsConfiguration
-                // TODO ドメインは指定する
-                //.addAllowedOrigin("http://localhost:3000");
-                .addAllowedOrigin("*");
+                // TODO フロントエンドを別ドメインにする場合などに使用する
+                .addAllowedOrigin("http://localhost:3000");
         UrlBasedCorsConfigurationSource corsSource = new UrlBasedCorsConfigurationSource();
         // すべてのパスを対象にする
         corsSource.registerCorsConfiguration("/**", corsConfiguration);
