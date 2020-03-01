@@ -3,6 +3,7 @@
  */
 package com.example.demo.domain.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,14 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.entity.Account;
 import com.example.demo.domain.entity.Ticket;
+import com.example.demo.domain.entity.master.TicketCategory;
+import com.example.demo.domain.entity.master.TicketPriority;
+import com.example.demo.domain.entity.master.TicketStatus;
 import com.example.demo.domain.model.TicketSubInfo;
+import com.example.demo.domain.repository.TicketCategoryRepository;
+import com.example.demo.domain.repository.TicketPriorityRepository;
 import com.example.demo.domain.repository.TicketRepository;
+import com.example.demo.domain.repository.TicketStatusRepository;
 import com.example.demo.domain.service.TicketService;
 
 /**
@@ -26,6 +33,13 @@ public class TicketServiceImpl implements TicketService {
 
     @Autowired
     private TicketRepository ticketRepository;
+
+    @Autowired
+    private TicketCategoryRepository categoryRepository;
+    @Autowired
+    private TicketPriorityRepository priorityRepository;
+    @Autowired
+    private TicketStatusRepository statusRepository;
 
     /**
      * {@inheritDoc}
@@ -61,10 +75,22 @@ public class TicketServiceImpl implements TicketService {
         return this.ticketRepository.findByAuthorOrderByCreatedAtDesc(pages, account);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TicketSubInfo getTicketSubInfo() {
-        // TODO 自動生成されたメソッド・スタブ
-        return null;
+        TicketSubInfo ticketSubInfo = new TicketSubInfo();
+
+        List<TicketCategory> ticketCategories = this.categoryRepository.findAllByOrderByCode();
+        List<TicketStatus> ticketStatuses = this.statusRepository.findAllByOrderByCode();
+        List<TicketPriority> ticketPriorities = this.priorityRepository.findAllByOrderByCode();
+
+        ticketSubInfo.setTicketCategories(ticketCategories);
+        ticketSubInfo.setTicketStatuses(ticketStatuses);
+        ticketSubInfo.setTicketPriorities(ticketPriorities);
+
+        return ticketSubInfo;
     }
 
 }

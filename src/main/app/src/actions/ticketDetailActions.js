@@ -8,7 +8,6 @@ export const UPDATE_TICKET_DETAIL = 'UPDATE_TICKET_DETAIL'
 export const SUCCESS_TICKET_UPDATE_API = 'SUCCESS_TICKET_UPDATE_API'
 export const FAIL_TICKET_UPDATE_API = 'FAIL_TICKET_UPDATE_API'
 
-
 export const fetchTicketDetail = (ticketId) => {
     return {
         type: FETCH_TICKET_DETAIL,
@@ -25,4 +24,3 @@ export const updateTicketDetail = (values) => {
         isLoading: true
     }
 };
-

@@ -11,6 +11,7 @@ const ticketDetailState = (state = initialState, action) => {
     console.log("ticketDetailState action.items:" + JSON.stringify(action.items));
     console.log("ticketDetailState action.isLoading:" + action.isLoading);
     switch (action.type) {
+        // チケット情報取得
         case FETCH_TICKET_DETAIL:
             state.type = action.type;
             state.items = action.items;
@@ -44,7 +45,6 @@ const ticketDetailState = (state = initialState, action) => {
             state.items = action.updateValues;
             state.isLoading = action.isLoading;
             return Object.assign({}, state);
-
         default:
             state.isLoading = false;
             return state;

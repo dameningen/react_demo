@@ -7,7 +7,9 @@ import { Select, TextField } from 'final-form-material-ui';
 import React, { Component } from "react";
 import { Field, Form } from 'react-final-form';
 import { connect } from 'react-redux';
+import { fetchAccountList } from '../../actions/accountListActions';
 import { fetchTicketDetail, updateTicketDetail } from '../../actions/ticketDetailActions';
+import { fetchTicketSubInfo } from '../../actions/ticketSubInfoActions';
 import DateTimeDisplay from "../../components/DateTimeDisplay/DateTimeDisplay";
 import PageTitle from "../../components/PageTitle/PageTitle";
 
@@ -64,6 +66,10 @@ class TicketDetail extends Component {
         const ticketId = params.id;
         // チケットIDをパラメータにしてチケット情報を取得する
         this.props.dispatch(fetchTicketDetail(ticketId));
+        // チケットサブ情報を取得する
+        this.props.dispatch(fetchTicketSubInfo());
+        // アカウントリストを取得する
+        this.props.dispatch(fetchAccountList(true));
     }
 
     onSubmit = async values => {
@@ -110,8 +116,9 @@ class TicketDetail extends Component {
                                                 component={Select}
                                                 label="分類"
                                                 formControlProps={{ fullWidth: true }}>
-                                                <MenuItem value={1}>質問</MenuItem>
-                                                <MenuItem value={2}>クレーム</MenuItem>
+                                                {this.props.subInfo.ticketCategories ?
+                                                    this.props.subInfo.ticketCategories.map(d => <MenuItem value={d.code}>{d.name}</MenuItem>)
+                                                    : <MenuItem value={0}>null</MenuItem>}
                                             </Field>
                                         </Grid>
                                         <Grid item xs={4}>
@@ -122,9 +129,9 @@ class TicketDetail extends Component {
                                                 component={Select}
                                                 label="優先度"
                                                 formControlProps={{ fullWidth: true }}>
-                                                <MenuItem value={1}>高</MenuItem>
-                                                <MenuItem value={2}>中</MenuItem>
-                                                <MenuItem value={3}>低</MenuItem>
+                                                {this.props.subInfo.ticketPriorities ?
+                                                    this.props.subInfo.ticketPriorities.map(d => <MenuItem value={d.code}>{d.name}</MenuItem>)
+                                                    : <MenuItem value={0}>null</MenuItem>}
                                             </Field>
                                         </Grid>
                                         <Grid item xs={4}>
@@ -135,12 +142,9 @@ class TicketDetail extends Component {
                                                 component={Select}
                                                 label="ステータス"
                                                 formControlProps={{ fullWidth: true }}>
-                                                <MenuItem value={1}>新規</MenuItem>
-                                                <MenuItem value={2}>割り当て済み</MenuItem>
-                                                <MenuItem value={3}>解決済み</MenuItem>
-                                                <MenuItem value={4}>承認済み</MenuItem>
-                                                <MenuItem value={5}>不承認</MenuItem>
-                                                <MenuItem value={6}>終了</MenuItem>
+                                                {this.props.subInfo.ticketStatuses ?
+                                                    this.props.subInfo.ticketStatuses.map(d => <MenuItem value={d.code}>{d.name}</MenuItem>)
+                                                    : <MenuItem value={0}>null</MenuItem>}
                                             </Field>
                                         </Grid>
                                         <Grid item xs={12}>
@@ -187,8 +191,9 @@ class TicketDetail extends Component {
                                                 component={Select}
                                                 label="登録者"
                                                 formControlProps={{ fullWidth: true }}>
-                                                <MenuItem value={1}>admin</MenuItem>
-                                                <MenuItem value={2}>user</MenuItem>
+                                                {this.props.accountList ?
+                                                    this.props.accountList.map(d => <MenuItem value={d.id}>{d.username}</MenuItem>)
+                                                    : <MenuItem value={0}>null</MenuItem>}
                                             </Field>
                                         </Grid>
                                         <Grid item xs={4}>
@@ -199,8 +204,9 @@ class TicketDetail extends Component {
                                                 component={Select}
                                                 label="更新者"
                                                 formControlProps={{ fullWidth: true }}>
-                                                <MenuItem value={1}>admin</MenuItem>
-                                                <MenuItem value={2}>user</MenuItem>
+                                                {this.props.accountList ?
+                                                    this.props.accountList.map(d => <MenuItem value={d.id}>{d.username}</MenuItem>)
+                                                    : <MenuItem value={0}>null</MenuItem>}
                                             </Field>
                                         </Grid>
                                         <Grid item xs={4}>
@@ -211,8 +217,9 @@ class TicketDetail extends Component {
                                                 component={Select}
                                                 label="担当者"
                                                 formControlProps={{ fullWidth: true }}>
-                                                <MenuItem value={1}>admin</MenuItem>
-                                                <MenuItem value={2}>user</MenuItem>
+                                                {this.props.accountList ?
+                                                    this.props.accountList.map(d => <MenuItem value={d.id}>{d.username}</MenuItem>)
+                                                    : <MenuItem value={0}>null</MenuItem>}
                                             </Field>
                                         </Grid>
                                         <Grid item style={{ marginTop: 16 }}>
@@ -247,7 +254,11 @@ class TicketDetail extends Component {
 }
 
 const mapStateToProps = (state) => {
-    return { val: state.ticketDetailState.items };
+    return {
+        val: state.ticketDetailState.items,
+        subInfo: state.ticketSubInfoState.items,
+        accountList: state.accountListState.items
+    };
 };
 
 export default connect(mapStateToProps)(TicketDetail);

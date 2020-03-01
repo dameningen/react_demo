@@ -11,15 +11,39 @@ const requestAccountListApi = async () => {
     return { data, error };
 }
 
-export function* accountListSaga() {
-    const { data, error } = yield call(requestAccountListApi);
-    if (data) {
-        // API成功時
-        // TODO：itemsに設定するデータは要再考
-        yield put({ type: SUCCESS_ACCOUNT_LIST_API, items: data.data.content, isLoading: false });
+const requestAccountListForSelectApi = async () => {
+    const url = "http://localhost:8080/api/account/list";
+    const { data, error } = await apiCallGet(url);
+    return { data, error };
+}
+
+
+export function* accountListSaga({ forSelect }) {
+    console.log("★★★★forSelect：：：" + forSelect);
+    // TODO 記法要確認
+    if (forSelect) {
+        const { data, error } = yield call(requestAccountListForSelectApi);
+        console.log("★★★★：：：" + JSON.stringify(data));
+        if (data) {
+            // API成功時
+            // TODO：itemsに設定するデータは要再考
+            yield put({ type: SUCCESS_ACCOUNT_LIST_API, items: data.data, isLoading: false });
+        } else {
+            console.log("accountListSaga error:" + error.message);
+            // API失敗時は空の配列を返却する
+            yield put({ type: FAIL_ACCOUNT_LIST_API, items: [], isLoading: false });
+        }
     } else {
-        console.log("accountListSaga error:" + error.message);
-        // API失敗時は空の配列を返却する
-        yield put({ type: FAIL_ACCOUNT_LIST_API, items: [], isLoading: false });
+        console.log("★★★★：：：TRUEじゃない！！");
+        const { data, error } = yield call(requestAccountListApi);
+        if (data) {
+            // API成功時
+            // TODO：itemsに設定するデータは要再考
+            yield put({ type: SUCCESS_ACCOUNT_LIST_API, items: data.data.content, isLoading: false });
+        } else {
+            console.log("accountListSaga error:" + error.message);
+            // API失敗時は空の配列を返却する
+            yield put({ type: FAIL_ACCOUNT_LIST_API, items: [], isLoading: false });
+        }
     }
 }

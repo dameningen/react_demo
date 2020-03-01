@@ -3,6 +3,7 @@
  */
 package com.example.demo.domain.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,6 +122,16 @@ public class AccountServiceImpl implements AccountService {
     public void registerUser(String username, String password, String mailAddress) {
         Account user = new Account(username, passwordEncoder.encode(password), mailAddress);
         repository.save(user);
+    }
+
+    /**
+     *
+     */
+    @Override
+    public List<Account> getAccountList() {
+        List<Account> accountList = repository.findByEnabledTrueOrderById();
+
+        return accountList;
     }
 
 }

@@ -3,11 +3,11 @@ export const FETCH_ACCOUNT_LIST = 'FETCH_ACCOUNT_LIST'
 export const SUCCESS_ACCOUNT_LIST_API = 'SUCCESS_ACCOUNT_LIST_API'
 export const FAIL_ACCOUNT_LIST_API = 'FAIL_ACCOUNT_LIST_API'
 
-export const fetchAccountList = () => {
+export const fetchAccountList = (forSelectFlg = false) => {
     return {
         type: FETCH_ACCOUNT_LIST,
         items: [],
-        isLoading: true
+        isLoading: true,
+        forSelect: forSelectFlg
     }
 };
-

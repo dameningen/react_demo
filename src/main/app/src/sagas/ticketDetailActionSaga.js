@@ -20,7 +20,6 @@ const requestTicketUpdatelApi = async (values) => {
     return { data, error };
 }
 
-
 export function* ticketDetailSaga({ ticketId }) {
     console.log("★ticketDetailSaga ticketId:" + ticketId);
     const { data, error } = yield call(requestTicketDetailApi, ticketId);

@@ -104,6 +104,13 @@ class TicketList extends Component {
             options: {
                 filter: true,
                 sort: false,
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <>
+                            {convDateTIme(value)}
+                        </>
+                    );
+                }
             }
         },
         {

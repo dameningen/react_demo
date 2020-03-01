@@ -27,6 +27,7 @@ import com.example.demo.domain.entity.Account;
 import com.example.demo.domain.entity.Ticket;
 import com.example.demo.domain.entity.master.TicketStatus;
 import com.example.demo.domain.enums.TicketStatusEnum;
+import com.example.demo.domain.model.TicketSubInfo;
 import com.example.demo.domain.service.TicketService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -102,6 +103,10 @@ public class TicketController extends AbstractController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * @param id
+     * @return
+     */
     @GetMapping(value = "{id}")
     public ResponseEntity<Response<Ticket>> findById(@PathVariable("id") long id) {
         Response<Ticket> response = new Response<Ticket>();
@@ -143,6 +148,19 @@ public class TicketController extends AbstractController {
         }
         log.debug("■取得したチケット：" + tickets.getContent());
         response.setData(tickets);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * @return
+     */
+    @GetMapping(value = "/subInfo")
+    public ResponseEntity<Response<TicketSubInfo>> findAllTicketSubInfo() {
+
+        Response<TicketSubInfo> response = new Response<TicketSubInfo>();
+        TicketSubInfo subInfo = ticketService.getTicketSubInfo();
+        response.setData(subInfo);
 
         return ResponseEntity.ok(response);
     }

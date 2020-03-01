@@ -4,6 +4,7 @@
 package com.example.demo.application.controller;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -82,6 +83,25 @@ public class AuthController extends AbstractController {
      * @param count
      * @return
      */
+    @GetMapping(value = "/list")
+    public ResponseEntity<Response<List<Account>>> getAccountList() {
+
+        Response<List<Account>> response = new Response<List<Account>>();
+        List<Account> accounts = null;
+
+        accounts = accountService.getAccountList();
+        log.debug("■取得したアカウント：" + accounts);
+        response.setData(accounts);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * ページ番号と1ページ辺りの要素数を指定してアカウントの一覧を取得する。
+     * @param page
+     * @param count
+     * @return
+     */
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "{page}/{count}")
     public ResponseEntity<Response<Page<Account>>> getAccountList(@PathVariable int page, @PathVariable int count) {
@@ -139,6 +159,13 @@ public class AuthController extends AbstractController {
         return account.isAdmin();
     }
 
+    /**
+     * アカウント情報を更新する。
+     * @param request
+     * @param account
+     * @param result
+     * @return
+     */
     @PostMapping("/update")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Response<Account>> update(
@@ -148,6 +175,7 @@ public class AuthController extends AbstractController {
         Response<Account> response = new Response<Account>();
         try {
             account.setPassword(passwordEncoder.encode(account.getPassword()));
+            account.setEnabled(true);
             Account accountPersisted = accountService.createOrUpdate(account);
             response.setData(accountPersisted);
 

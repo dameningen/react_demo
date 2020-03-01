@@ -3,6 +3,8 @@
  */
 package com.example.demo.domain.repository;
 
+import java.util.List;
+
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,4 +20,5 @@ public interface AccountRepository extends PagingAndSortingRepository<Account, L
 
     Account findByMailAddress(String mailAddress);
 
+    List<Account> findByEnabledTrueOrderById();
 }
