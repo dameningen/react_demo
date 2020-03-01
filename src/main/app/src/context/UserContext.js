@@ -62,13 +62,19 @@ async function loginUser(dispatch, login, password, history, setIsLoading, setEr
     params.append('mailAddress', login);
     params.append('password', password);
     try {
+      axios.defaults.withCredentials = true;
       // ログイン処理実行
-      await axios.post('http://localhost:8080/perform_login', params);
-      sessionStorage.setItem('id_token', 1)
+      let loginInfo = await axios.post('http://localhost:8080/perform_login', params);
+      let loginInfoData = loginInfo.data;
+      let username = loginInfoData.username;
+      let isAdmin = loginInfoData.isAdmin;
+      sessionStorage.setItem('id_token', 1);
+      sessionStorage.setItem('username', username);
+      sessionStorage.setItem('isAdmin', isAdmin);
       // TODO：ログイン成功時はここで権限情報チェックのAPIを実行してsessionStorageに
       //       設定して画面の表示制御を行う（イマイチだがとりあえず）
-      await isAdminRequest();
-      console.log('localStorage.getItem_isAdmin:' + sessionStorage.getItem('isAdmin'));
+      // await isAdminRequest();
+      // console.log('localStorage.getItem_isAdmin:' + sessionStorage.getItem('isAdmin'));
 
       setError(null)
       setIsLoading(false)

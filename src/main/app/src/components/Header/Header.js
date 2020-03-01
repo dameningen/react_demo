@@ -76,7 +76,7 @@ export default function Header(props) {
         >
           <div className={classes.profileMenuUser}>
             <Typography variant="h4" weight="medium">
-              John Smith
+              {sessionStorage.getItem('username')}
             </Typography>
           </div>
           <MenuItem

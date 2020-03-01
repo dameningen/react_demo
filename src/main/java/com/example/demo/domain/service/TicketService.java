@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.entity.Account;
 import com.example.demo.domain.entity.Ticket;
+import com.example.demo.domain.model.TicketSubInfo;
 
 /**
  * @author dameningen
@@ -48,5 +49,11 @@ public interface TicketService {
      * @return
      */
     Page<Ticket> findByCurrentAuthor(int page, int count, Account account);
+
+    /**
+     * チケットのステータスや分類、優先度などの関連情報をそれぞのマスタから取得する。
+     * @return
+     */
+    TicketSubInfo getTicketSubInfo();
 
 }

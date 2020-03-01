@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.entity.Account;
 import com.example.demo.domain.entity.Ticket;
+import com.example.demo.domain.model.TicketSubInfo;
 import com.example.demo.domain.repository.TicketRepository;
 import com.example.demo.domain.service.TicketService;
 
@@ -58,6 +59,12 @@ public class TicketServiceImpl implements TicketService {
     public Page<Ticket> findByCurrentAuthor(int page, int count, Account account) {
         Pageable pages = PageRequest.of(page, count);
         return this.ticketRepository.findByAuthorOrderByCreatedAtDesc(pages, account);
+    }
+
+    @Override
+    public TicketSubInfo getTicketSubInfo() {
+        // TODO 自動生成されたメソッド・スタブ
+        return null;
     }
 
 }

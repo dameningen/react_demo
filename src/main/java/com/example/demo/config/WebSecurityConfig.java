@@ -3,6 +3,8 @@
  */
 package com.example.demo.config;
 
+import java.nio.charset.StandardCharsets;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -27,7 +30,10 @@ import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.example.demo.domain.entity.Account;
 import com.example.demo.domain.service.AccountService;
+
+import net.minidev.json.JSONObject;
 
 /**
  * Spring Securityの機能設定クラス。
@@ -58,6 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // TODO ログインページは変なのを指定すると無限にリダイレクトしてしまう
                 .loginPage("/#/login")
                 .loginProcessingUrl("/perform_login")
+                .successHandler(LOGIN_SUCCESS)
                 .failureHandler(LOGIN_FAILED)
                 .usernameParameter("mailAddress").passwordParameter("password");
 
@@ -86,10 +93,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
         corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
         corsConfiguration.setAllowCredentials(true);
-        // 実際は環境ごとにドメインが変わるはずなので、設定で動的に変更でき料にする
-        corsConfiguration
-                // TODO フロントエンドを別ドメインにする場合などに使用する
-                .addAllowedOrigin("http://localhost:3000");
+        // 実際は環境ごとにドメインが変わるはずなので、設定で動的に変更出来るようにする
+        corsConfiguration.addAllowedOrigin("http://localhost:3000");
+        corsConfiguration.addAllowedOrigin("http://127.0.0.1:3000");
         UrlBasedCorsConfigurationSource corsSource = new UrlBasedCorsConfigurationSource();
         // すべてのパスを対象にする
         corsSource.registerCorsConfiguration("/**", corsConfiguration);
@@ -117,6 +123,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
+    /**
+     * ログイン成功時のハンドラ
+     */
+    private static final AuthenticationSuccessHandler LOGIN_SUCCESS = (req, res, auth) -> {
+        // HTTP Statusは200
+        res.setStatus(HttpServletResponse.SC_OK);
+
+        // Content-Type: application/json
+        res.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        res.setCharacterEncoding(StandardCharsets.UTF_8.toString());
+
+        Account account = (Account) auth.getPrincipal();
+        String username = account.getUsername();
+        boolean isAdmin = account.isAdmin();
+
+        JSONObject jsonObj = new JSONObject();
+        jsonObj.put("username", username);
+        jsonObj.put("isAdmin", isAdmin);
+
+        // Body
+        res.getWriter().write(jsonObj.toString());
+        res.getWriter().flush();
+    };
 
     /**
      * ログイン失敗時のハンドラ

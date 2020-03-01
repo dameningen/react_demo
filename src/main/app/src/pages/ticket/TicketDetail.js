@@ -27,7 +27,6 @@ function KeyboardDateTimePickerWrapper(props) {
         ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) &&
         meta.touched;
 
-
     return (
         <KeyboardDateTimePicker
             {...rest}
@@ -68,20 +67,6 @@ class TicketDetail extends Component {
     }
 
     onSubmit = async values => {
-        // const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-        // await sleep(300);
-        // window.alert(JSON.stringify(values, 0, 2));
-        // TODO チケット更新に不要な情報を削除する（サーバ側でやる方が良いかも？）
-        // delete values.author.authorities;
-        // delete values.author.createdAt;
-        // delete values.author.updatedAt;
-        // delete values.updater.authorities;
-        // delete values.updater.createdAt;
-        // delete values.updater.updatedAt;
-        // delete values.assignedUser.authorities;
-        // delete values.assignedUser.createdAt;
-        // delete values.assignedUser.updatedAt;
-
         // チケット情報を更新する
         this.props.dispatch(updateTicketDetail(values));
     };
