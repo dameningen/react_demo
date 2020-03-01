@@ -55,7 +55,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/auth").permitAll()
                 .antMatchers(HttpMethod.POST, "/perform_login").permitAll()
-                // .antMatchers(HttpMethod.POST, "/api/user/create").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -104,12 +103,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * 動作確認用にロード時に、「admin」ユーザを登録する。
+     * {@inheritDoc}
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(accountService)
+        auth.userDetailsService(accountService)
                 .passwordEncoder(passwordEncoder());
     }
 
@@ -154,12 +152,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final AuthenticationFailureHandler LOGIN_FAILED = (req, res, auth) -> {
         // HTTP Statusは401
         res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-
         // Content-Type: application/json
         res.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
+        JSONObject jsonObj = new JSONObject();
+        jsonObj.put("message", "login failed.");
+
         // Body
-        res.getWriter().write("{cdode : login failed.}");
+        res.getWriter().write(jsonObj.toString());
         res.getWriter().flush();
     };
 
