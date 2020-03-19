@@ -7,7 +7,7 @@ import { apiCallGet } from '../libs/common/apiCall';
  * チケットサブ情報取得APIをコールする処理。
  */
 const requestTicketSubInfoApi = async () => {
-    const url = 'http://localhost:8080/api/ticket/subInfo';
+    const url = '/api/ticket/subInfo';
     const { data, error } = await apiCallGet(url);
     return { data, error };
 }

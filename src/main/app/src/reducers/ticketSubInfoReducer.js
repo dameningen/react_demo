@@ -7,9 +7,6 @@ const initialState = {
 }
 
 const ticketSubInfoState = (state = initialState, action) => {
-    console.log("ticketSubInfoState action.type:" + action.type);
-    console.log("ticketSubInfoState action.items:" + JSON.stringify(action.items));
-    console.log("ticketSubInfoState action.isLoading:" + action.isLoading);
     switch (action.type) {
         // チケットサブ情報取得
         case FETCH_TICKET_SUBINFO:

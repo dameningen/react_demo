@@ -50,6 +50,9 @@ class AccountDetail extends Component {
         //values.authorities = ['ROLE_ADMIN', 'ROLE_USER'];
         //values.authorities = [1, 2];
 
+        const { params } = this.props.match;
+        const accountId = params.id;
+        values.id = accountId;
         // アカウント情報を更新する
         this.props.dispatch(updateAccountDetail(values));
     };
@@ -69,7 +72,6 @@ class AccountDetail extends Component {
                         validate={validate}
                         render={({ handleSubmit, reset, submitting, pristine, values }) => (
                             <form onSubmit={handleSubmit}>
-                                <input type="hidden" value={this.props.val.id} />
                                 <Paper style={{ padding: 16 }}>
                                     <Grid container alignItems="flex-start" spacing={2}>
                                         <Grid item xs={12}>

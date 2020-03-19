@@ -7,9 +7,6 @@ const initialState = {
 }
 
 const sbRandomState = (state = initialState, action) => {
-    console.log("sbRandomState action.type:" + action.type);
-    console.log("sbRandomState action.items:" + action.items);
-    console.log("sbRandomState action.isLoading:" + action.isLoading);
     switch (action.type) {
         case FETCH_SBRANDOM:
             state.type = action.type;

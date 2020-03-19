@@ -7,9 +7,6 @@ const initialState = {
 }
 
 const accountDetailState = (state = initialState, action) => {
-    console.log("accountDetailState action.type:" + action.type);
-    console.log("accountDetailState action.items:" + JSON.stringify(action.items));
-    console.log("accountDetailState action.isLoading:" + action.isLoading);
     switch (action.type) {
         case FETCH_ACCOUNT_DETAIL:
             state.type = action.type;

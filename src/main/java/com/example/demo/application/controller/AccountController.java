@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("api/account")
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Slf4j
-public class AuthController extends AbstractController {
+public class AccountController extends AbstractController {
 
     @Autowired
     private AccountService accountService;

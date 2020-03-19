@@ -7,9 +7,6 @@ const initialState = {
 }
 
 const ticketListState = (state = initialState, action) => {
-    console.log("ticketListState action.type:" + action.type);
-    console.log("ticketListState action.items:" + JSON.stringify(action.items));
-    console.log("ticketListState action.isLoading:" + action.isLoading);
     switch (action.type) {
         case FETCH_TICKET_LIST:
             state.type = action.type;

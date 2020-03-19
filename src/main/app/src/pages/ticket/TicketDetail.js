@@ -60,6 +60,11 @@ const validate = values => {
 };
 
 class TicketDetail extends Component {
+    constructor(props) {
+        super(props);
+        this.myRef = React.createRef(); // create a ref
+        this.myFormRef = React.createRef(); // create a ref
+    }
 
     componentDidMount() {
         const { params } = this.props.match;
@@ -69,26 +74,60 @@ class TicketDetail extends Component {
         // チケットサブ情報を取得する
         this.props.dispatch(fetchTicketSubInfo());
         // アカウントリストを取得する
-        this.props.dispatch(fetchAccountList(true));
+        this.props.dispatch(fetchAccountList());
     }
 
     onSubmit = async values => {
+        const { params } = this.props.match;
+        const ticketId = params.id;
+        values.id = ticketId;
         // チケット情報を更新する
         this.props.dispatch(updateTicketDetail(values));
     };
+
+    setTitleVal = (updVal) => {
+        console.log('★setTtitleVal:' + updVal);
+        console.log('★setTtitleVal:' + this.myRef.current);
+        console.log('★setTtitleVal:' + this.myRef.current.defaultValue);
+        console.log('★this.val:' + JSON.stringify(this.props.val));
+        console.log('★setTtitleVal:' + this.myFormRef.current.elements);
+        setTimeout(() => {
+            this.myRef.current.focus();
+            this.myRef.current.click();
+            this.myRef.current.select();
+            this.myRef.current.value = updVal;
+            if (this.props.val && this.props.val.correspondence) {
+                this.props.val.correspondence = updVal;
+            } else if (this.props.val) {
+                console.log('test!!!');
+                this.props.val.correspondence = updVal;
+                console.log(this.props.val.correspondence);
+            } else {
+                this.props.val.push({ title: updVal });
+            }
+        }, 100);
+    }
 
     render() {
         return (
             <>
                 <PageTitle title="チケット詳細" />
                 <div style={{ padding: 16, margin: 'auto' }}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                        onClick={() => this.setTitleVal('test')}>
+                        タイトル更新
+                    </Button>
+
                     <Form
                         onSubmit={this.onSubmit}
                         initialValues={this.props.val}
                         validate={validate}
                         render={({ handleSubmit, reset, submitting, pristine, values }) => (
-                            <form onSubmit={handleSubmit}>
-                                <input type="hidden" value={this.props.val.id} />
+                            <form onSubmit={handleSubmit}
+                                ref={this.myFormRef}>
                                 <Paper style={{ padding: 16 }}>
                                     <Grid container alignItems="flex-start" spacing={2}>
                                         <Grid item xs={12}>
@@ -106,7 +145,7 @@ class TicketDetail extends Component {
                                             <label>登録日：</label><DateTimeDisplay val={this.props.val.createdAt} />
                                         </Grid>
                                         <Grid item xs={6}>
-                                            <label>登録日：</label><DateTimeDisplay val={this.props.val.updatedAt} />
+                                            <label>更新日：</label><DateTimeDisplay val={this.props.val.updatedAt} />
                                         </Grid>
                                         <Grid item xs={4}>
                                             <Field
@@ -117,7 +156,7 @@ class TicketDetail extends Component {
                                                 label="分類"
                                                 formControlProps={{ fullWidth: true }}>
                                                 {this.props.subInfo.ticketCategories ?
-                                                    this.props.subInfo.ticketCategories.map(d => <MenuItem value={d.code}>{d.name}</MenuItem>)
+                                                    this.props.subInfo.ticketCategories.map((d, idx) => <MenuItem key={idx} value={d.code}>{d.name}</MenuItem>)
                                                     : <MenuItem value={0}>null</MenuItem>}
                                             </Field>
                                         </Grid>
@@ -130,7 +169,7 @@ class TicketDetail extends Component {
                                                 label="優先度"
                                                 formControlProps={{ fullWidth: true }}>
                                                 {this.props.subInfo.ticketPriorities ?
-                                                    this.props.subInfo.ticketPriorities.map(d => <MenuItem value={d.code}>{d.name}</MenuItem>)
+                                                    this.props.subInfo.ticketPriorities.map((d, idx) => <MenuItem key={idx} value={d.code}>{d.name}</MenuItem>)
                                                     : <MenuItem value={0}>null</MenuItem>}
                                             </Field>
                                         </Grid>
@@ -143,7 +182,7 @@ class TicketDetail extends Component {
                                                 label="ステータス"
                                                 formControlProps={{ fullWidth: true }}>
                                                 {this.props.subInfo.ticketStatuses ?
-                                                    this.props.subInfo.ticketStatuses.map(d => <MenuItem value={d.code}>{d.name}</MenuItem>)
+                                                    this.props.subInfo.ticketStatuses.map((d, idx) => <MenuItem key={idx} value={d.code}>{d.name}</MenuItem>)
                                                     : <MenuItem value={0}>null</MenuItem>}
                                             </Field>
                                         </Grid>
@@ -170,6 +209,7 @@ class TicketDetail extends Component {
                                                 variant="outlined"
                                                 type="text"
                                                 label="対応内容"
+                                                inputRef={this.myRef}
                                             />
                                         </Grid>
                                         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ja}>
@@ -192,7 +232,7 @@ class TicketDetail extends Component {
                                                 label="登録者"
                                                 formControlProps={{ fullWidth: true }}>
                                                 {this.props.accountList ?
-                                                    this.props.accountList.map(d => <MenuItem value={d.id}>{d.username}</MenuItem>)
+                                                    this.props.accountList.map((d, idx) => <MenuItem key={idx} value={d.id}>{d.username}</MenuItem>)
                                                     : <MenuItem value={0}>null</MenuItem>}
                                             </Field>
                                         </Grid>
@@ -205,7 +245,7 @@ class TicketDetail extends Component {
                                                 label="更新者"
                                                 formControlProps={{ fullWidth: true }}>
                                                 {this.props.accountList ?
-                                                    this.props.accountList.map(d => <MenuItem value={d.id}>{d.username}</MenuItem>)
+                                                    this.props.accountList.map((d, idx) => <MenuItem key={idx} value={d.id}>{d.username}</MenuItem>)
                                                     : <MenuItem value={0}>null</MenuItem>}
                                             </Field>
                                         </Grid>
@@ -218,7 +258,7 @@ class TicketDetail extends Component {
                                                 label="担当者"
                                                 formControlProps={{ fullWidth: true }}>
                                                 {this.props.accountList ?
-                                                    this.props.accountList.map(d => <MenuItem value={d.id}>{d.username}</MenuItem>)
+                                                    this.props.accountList.map((d, idx) => <MenuItem key={idx} value={d.id}>{d.username}</MenuItem>)
                                                     : <MenuItem value={0}>null</MenuItem>}
                                             </Field>
                                         </Grid>

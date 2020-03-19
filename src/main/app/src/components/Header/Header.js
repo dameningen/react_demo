@@ -9,6 +9,7 @@ import { signOut, useUserDispatch } from "../../context/UserContext";
 import { Typography } from "../Wrappers/Wrappers";
 // styles
 import useStyles from "./styles";
+import SelectComponent from "../SelectComponent/SelectComponent"
 
 export default function Header(props) {
   var classes = useStyles();
@@ -56,6 +57,9 @@ export default function Header(props) {
           ヘルプデスク
         </Typography>
         <div className={classes.grow} />
+
+        <SelectComponent />
+
         <IconButton
           aria-haspopup="true"
           color="inherit"

@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import { fetchSbRandom } from '../../actions/springBootRandomActions';
 import PageTitle from "../../components/PageTitle/PageTitle";
 import { apiCallGet, apiCallPost } from '../../libs/common/apiCall';
+// import { getSbRandom } from '../../moducks/sbRandomSearch';
+
 
 const AUTH_ENDPOINT = 'http://localhost:8080/api/auth';
 const GET_ACCOUNT_INFO_ENDPOINT = 'http://localhost:8080/api/account/getCurrentAccountInfo';
@@ -49,13 +51,9 @@ const columns = [
 
 
 class DashBoard extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-
   componentDidMount() {
     this.props.dispatch(fetchSbRandom());
+    // this.props.dispatch(getSbRandom());
   }
 
   handleAuth() {

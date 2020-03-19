@@ -6,7 +6,7 @@ import { apiCallGet } from '../libs/common/apiCall';
  * チケット一覧（0～10件目）取得APIをコールする処理。
  */
 const requestTicketListApi = async () => {
-    const url = "http://localhost:8080/api/ticket/0/10";
+    const url = "/api/ticket/0/10";
     const { data, error } = await apiCallGet(url);
     return { data, error };
 }

@@ -2,12 +2,11 @@ import { call, put } from 'redux-saga/effects';
 import { FAIL_SBRANDOM_API, SUCCESS_SBRANDOM_API } from '../actions/springBootRandomActions';
 import { apiCallGet } from '../libs/common/apiCall';
 
-
 /**
  * SpringBootの試験用APIをコールする処理。
  */
 const requestSbRandomApi = () => {
-    const url = "http://localhost:8080/api/sbRandom";
+    const url = "/api/sbRandom";
     return apiCallGet(url);
 }
 
