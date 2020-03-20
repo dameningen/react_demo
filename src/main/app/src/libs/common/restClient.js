@@ -1,5 +1,4 @@
 import axios from 'axios';
-import axiosCookieJarSupport from 'axios-cookiejar-support';
 
 // リクエスト先ホストのポート番号
 /* 
@@ -16,43 +15,6 @@ const restClient = axios.create(
         baseURL: 'http://' + document.location.hostname + ':' + HOST_PORT_NUM,
     }
 );
-
-// Cookieに登録されているXSRFトークンのキー
-const COOKIE_KEY_XSRF_TOKEN = 'XSRF-TOKEN';
-// リクエスト実行時にリクエストヘッダに乗せるXSRFトークンのキー
-const HEDER_KEY_XSRF_TOKEN = 'X-XSRF-TOKEN';
-
-/**
- * Cookieから任意の値を取得し返却する。
- * @param {*} cname 取得対象のキー
- */
-const getCookie = (cname) => {
-    let name = cname + '=';
-    let ca = document.cookie.split(';');
-
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) === ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) === 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return '';
-}
-
-/**
- * リクエストヘッダにCookieから取得したXSRF-TOKENを設定する
- */
-// TODO axiosは自動でX-XSRF-TOKENをリクエストヘッダに乗せてくれるからいらない
-const requstHeaderSetting = () => {
-    axiosCookieJarSupport(restClient);
-    let xsrfToken = getCookie(COOKIE_KEY_XSRF_TOKEN);
-    // console.log('Cookieから取得したXSRF-TOKEN:' + xsrfToken);
-    // リクエストヘッダにCookieから取得したXSRF-TOKENを設定する
-    restClient.defaults.headers[HEDER_KEY_XSRF_TOKEN] = xsrfToken;
-}
 
 /**
  * 
@@ -79,21 +41,20 @@ export const loginClient = async (endPointPath, params = {}) => {
 export const restGet = (endPoint, params) => {
     console.log('■restGet:' + endPoint);
 
-    // リクエストヘッダ設定
-    // requstHeaderSetting();
-
     return restClient.get(
         endPoint,
         params,
         { withCredentials: true, }
     )
         .then((response) => {
-            console.log('apiCarestGetllGet レスポンス');
+            console.log('restGet レスポンス');
             console.dir(response.data);
             return response;
         })
         .catch((error) => {
             console.error(error.stack || error);
+            console.log('restGet error');
+            console.dir(error);
             return { error };
         });
 }
@@ -105,9 +66,6 @@ export const restGet = (endPoint, params) => {
  */
 export const restPost = (endPoint, params = {}) => {
     console.log('■restPost:' + endPoint);
-
-    // リクエストヘッダ設定
-    // requstHeaderSetting();
 
     return restClient.post(
         endPoint,

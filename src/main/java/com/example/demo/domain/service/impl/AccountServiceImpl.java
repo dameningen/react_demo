@@ -60,7 +60,6 @@ public class AccountServiceImpl implements AccountService {
      * {@inheritDoc}
      */
     @Override
-    @Transactional
     public Page<Account> getAccountList(int page, int count) {
         Pageable pages = PageRequest.of(page, count);
         return this.repository.findAll(pages);
@@ -79,6 +78,7 @@ public class AccountServiceImpl implements AccountService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional
     public void delete(long id) {
         this.repository.deleteById(id);
     }
@@ -106,6 +106,7 @@ public class AccountServiceImpl implements AccountService {
      * @param password
      * @param mailAddress
      */
+    @Override
     @Transactional
     public void registerAdmin(String username, String password, String mailAddress) {
         Account user = new Account(username, passwordEncoder.encode(password), mailAddress);
@@ -119,6 +120,7 @@ public class AccountServiceImpl implements AccountService {
      * @param password
      * @param mailAddress
      */
+    @Override
     @Transactional
     public void registerManager(String username, String password, String mailAddress) {
         Account user = new Account(username, passwordEncoder.encode(password), mailAddress);
@@ -132,6 +134,7 @@ public class AccountServiceImpl implements AccountService {
      * @param password
      * @param mailAddress
      */
+    @Override
     @Transactional
     public void registerUser(String username, String password, String mailAddress) {
         Account user = new Account(username, passwordEncoder.encode(password), mailAddress);

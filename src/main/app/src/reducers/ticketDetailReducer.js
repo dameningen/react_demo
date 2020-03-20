@@ -1,47 +1,93 @@
-import { FAIL_TICKET_DETAIL_API, FAIL_TICKET_UPDATE_API, FETCH_TICKET_DETAIL, SUCCESS_TICKET_DETAIL_API, SUCCESS_TICKET_UPDATE_API, UPDATE_TICKET_DETAIL } from '../actions/ticketDetailActions';
+import { DELETE_TICKET, FAIL_GET_TICKET_DETAIL, FAIL_TICKET_DELETE, FAIL_TICKET_REGISTER, FAIL_TICKET_UPDATE, GET_TICKET_DETAIL, REGISTER_TICKET, SUCCESS_GET_TICKET_DETAIL, SUCCESS_TICKET_DELETE, SUCCESS_TICKET_REGISTER, SUCCESS_TICKET_UPDATE, UPDATE_TICKET } from '../actions/ticketDetailActions';
 
 const initialState = {
-    type: '',
-    items: [],
+    items: [], // 取得したチケット詳細情報
+    updateValues: {}, // 登録または更新するチケット情報
+    errMsg: null,
     isLoading: false
 }
 
 const ticketDetailState = (state = initialState, action) => {
     switch (action.type) {
         // チケット情報取得
-        case FETCH_TICKET_DETAIL:
-            state.type = action.type;
-            state.items = action.items;
-            state.isLoading = action.isLoading;
-            return Object.assign({}, state);
-        case SUCCESS_TICKET_DETAIL_API:
-            state.type = action.type;
-            state.items = action.items;
-            state.isLoading = action.isLoading;
-            return Object.assign({}, state);
-        case FAIL_TICKET_DETAIL_API:
-            state.type = action.type;
-            state.items = action.items;
-            state.isLoading = action.isLoading;
-            return Object.assign({}, state);
-        // 更新
-        case UPDATE_TICKET_DETAIL:
-            state.type = action.type;
-            state.updateValues = action.updateValues;
-            state.isLoading = action.isLoading;
-            return Object.assign({}, state);
-        case SUCCESS_TICKET_UPDATE_API:
-            state.type = action.type;
-            state.updateValues = action.updateValues;
-            state.items = action.updateValues;
-            state.isLoading = action.isLoading;
-            return Object.assign({}, state);
-        case FAIL_TICKET_UPDATE_API:
-            state.type = action.type;
-            state.updateValues = action.updateValues;
-            state.items = action.updateValues;
-            state.isLoading = action.isLoading;
-            return Object.assign({}, state);
+        case GET_TICKET_DETAIL:
+            return Object.assign({}, state, {
+                isLoading: action.isLoading,
+            });
+
+        case SUCCESS_GET_TICKET_DETAIL:
+            return Object.assign({}, state, {
+                items: action.items,
+                errMsg: null,
+                isLoading: action.isLoading,
+            });
+
+        case FAIL_GET_TICKET_DETAIL:
+            return Object.assign({}, state, {
+                errMsg: action.errMsg,
+                isLoading: action.isLoading,
+            });
+
+        // チケット登録
+        case REGISTER_TICKET:
+            return Object.assign({}, state, {
+                updateValues: action.updateValues,
+                isLoading: action.isLoading,
+            });
+
+        case SUCCESS_TICKET_REGISTER:
+            return Object.assign({}, state, {
+                updateValues: {},
+                errMsg: null,
+                isLoading: action.isLoading,
+            });
+
+        case FAIL_TICKET_REGISTER:
+            return Object.assign({}, state, {
+                updateValues: {},
+                errMsg: action.errMsg,
+                isLoading: action.isLoading,
+            });
+
+
+        // チケット更新
+        case UPDATE_TICKET:
+            return Object.assign({}, state, {
+                updateValues: action.updateValues,
+                isLoading: action.isLoading,
+            });
+
+        case SUCCESS_TICKET_UPDATE:
+            return Object.assign({}, state, {
+                updateValues: {},
+                errMsg: null,
+                isLoading: action.isLoading,
+            });
+
+        case FAIL_TICKET_UPDATE:
+            return Object.assign({}, state, {
+                updateValues: {},
+                errMsg: action.errMsg,
+                isLoading: action.isLoading,
+            });
+
+        // チケット削除
+        case DELETE_TICKET:
+            return Object.assign({}, state, {
+                isLoading: action.isLoading,
+            });
+
+        case SUCCESS_TICKET_DELETE:
+            return Object.assign({}, state, {
+                errMsg: null,
+                isLoading: action.isLoading,
+            });
+
+        case FAIL_TICKET_DELETE:
+            return Object.assign({}, state, {
+                errMsg: action.errMsg,
+                isLoading: action.isLoading,
+            });
         default:
             return state;
     }

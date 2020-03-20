@@ -35,6 +35,12 @@ public interface TicketService {
     Ticket createOrUpdate(Ticket ticket);
 
     /**
+     * チケット情報を削除する。
+     * @param id 削除対象チケットID
+     */
+    void delete(long id);
+
+    /**
      * チケット一覧（{@link List}）を取得する。
      * @return チケット一覧
      */

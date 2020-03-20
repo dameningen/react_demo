@@ -1,10 +1,9 @@
-// Picker
 import { Button, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, Paper } from '@material-ui/core';
 import { Checkbox, TextField } from 'final-form-material-ui';
 import React, { Component } from "react";
 import { Field, Form } from 'react-final-form';
 import { connect } from 'react-redux';
-import { fetchAccountDetail, updateAccountDetail } from '../../actions/accountDetailActions';
+import { getAccountDetail, updateAccountDetail } from '../../actions/accountDetailActions';
 import DateTimeDisplay from "../../components/DateTimeDisplay/DateTimeDisplay";
 import PageTitle from "../../components/PageTitle/PageTitle";
 
@@ -28,20 +27,16 @@ const validate = values => {
     return errors;
 };
 
+/**
+ * アカウント情報詳細ページ
+ */
 class AccountDetail extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: this.props.val
-        }
-    }
 
     componentDidMount() {
         const { params } = this.props.match;
         const accountId = params.id;
         // アカウントIDをパラメータにしてアカウント情報を取得する
-        this.props.dispatch(fetchAccountDetail(accountId));
+        this.props.dispatch(getAccountDetail(accountId));
     }
 
     onSubmit = async values => {
@@ -186,9 +181,11 @@ class AccountDetail extends Component {
     }
 }
 
-//const mapStateToProps = (response) => ({ response });
 const mapStateToProps = (state) => {
-    return { val: state.accountDetailState.items };
+    return {
+        val: state.accountDetailState.items,
+        errMsg: state.accountDetailState.errMsg,
+    };
 };
 
 export default connect(mapStateToProps)(AccountDetail);

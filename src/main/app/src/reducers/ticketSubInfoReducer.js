@@ -1,4 +1,4 @@
-import { FAIL_TICKET_SUBINFO, FETCH_TICKET_SUBINFO, SUCCESS_TICKET_SUBINFO } from '../actions/ticketSubInfoActions';
+import { FAIL_GET_TICKET_SUBINFO, GET_TICKET_SUBINFO, SUCCESS_GET_TICKET_SUBINFO } from '../actions/ticketSubInfoActions';
 
 const initialState = {
     type: '',
@@ -9,24 +9,23 @@ const initialState = {
 const ticketSubInfoState = (state = initialState, action) => {
     switch (action.type) {
         // チケットサブ情報取得
-        case FETCH_TICKET_SUBINFO:
+        case GET_TICKET_SUBINFO:
             state.type = action.type;
             state.items = action.items;
             state.isLoading = action.isLoading;
             return Object.assign({}, state);
-        case SUCCESS_TICKET_SUBINFO:
+        case SUCCESS_GET_TICKET_SUBINFO:
             state.type = action.type;
             state.items = action.items;
             state.isLoading = action.isLoading;
             return Object.assign({}, state);
-        case FAIL_TICKET_SUBINFO:
+        case FAIL_GET_TICKET_SUBINFO:
             state.type = action.type;
             state.items = action.items;
             state.isLoading = action.isLoading;
             return Object.assign({}, state);
 
         default:
-            state.isLoading = false;
             return state;
     }
 }

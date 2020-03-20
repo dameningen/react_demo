@@ -8,9 +8,9 @@ import React, { Component } from "react";
 import { Field, Form } from 'react-final-form';
 import LoadingOverlay from 'react-loading-overlay';
 import { connect } from 'react-redux';
-import { fetchAccountList } from '../../actions/accountListActions';
-import { fetchTicketDetail, updateTicketDetail } from '../../actions/ticketDetailActions';
-import { fetchTicketSubInfo } from '../../actions/ticketSubInfoActions';
+import { getAccountList } from '../../actions/accountListActions';
+import { getTicketDetail, updateTicketDetail } from '../../actions/ticketDetailActions';
+import { getTicketSubInfo } from '../../actions/ticketSubInfoActions';
 import DateTimeDisplay from "../../components/DateTimeDisplay/DateTimeDisplay";
 import PageTitle from "../../components/PageTitle/PageTitle";
 
@@ -94,11 +94,11 @@ class TicketDetail extends Component {
         const { params } = this.props.match;
         const ticketId = params.id;
         // チケットIDをパラメータにしてチケット情報を取得する
-        this.props.dispatch(fetchTicketDetail(ticketId));
+        this.props.dispatch(getTicketDetail(ticketId));
         // チケットサブ情報を取得する
-        this.props.dispatch(fetchTicketSubInfo());
+        this.props.dispatch(getTicketSubInfo());
         // アカウントリストを取得する
-        this.props.dispatch(fetchAccountList());
+        this.props.dispatch(getAccountList());
     }
 
     onSubmit = async values => {
@@ -133,7 +133,6 @@ class TicketDetail extends Component {
     }
 
     render() {
-        console.log('★★★★TicketDetailレンダリング！');
         return (
             <>
                 <PageTitle title="チケット詳細" />

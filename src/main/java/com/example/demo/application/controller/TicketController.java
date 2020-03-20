@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -114,16 +115,32 @@ public class TicketController extends AbstractController {
     }
 
     /**
+     * チケットのサブ情報として、分類、優先度、ステータスのリストを返却する。
+     * @return チケットサブ情報（分類、優先度、ステータスのリスト）
+     */
+    @GetMapping(value = "/subInfo")
+    public ResponseEntity<Response<TicketSubInfo>> findAllTicketSubInfo() {
+
+        Response<TicketSubInfo> response = new Response<>();
+        TicketSubInfo subInfo = ticketService.getTicketSubInfo();
+        response.setData(subInfo);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
      * チケットを新規登録する。
      * @param principal
      * @param ticket
      * @param result
      * @return
      */
-    @PostMapping("{id}")
+    @PostMapping("")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<Response<Ticket>> create(Principal principal, @RequestBody Ticket ticket,
             BindingResult result) {
+
+        log.debug("■チケット新規登録：" + ticket);
 
         Response<Ticket> response = new Response<>();
         try {
@@ -177,16 +194,19 @@ public class TicketController extends AbstractController {
     }
 
     /**
-     * チケットのサブ情報として、分類、優先度、ステータスのリストを返却する。
-     * @return チケットサブ情報（分類、優先度、ステータスのリスト）
+     * チケット情報を削除する。
+     * @param id チケットID
+     * @return チケット情報
      */
-    @GetMapping(value = "/subInfo")
-    public ResponseEntity<Response<TicketSubInfo>> findAllTicketSubInfo() {
-
-        Response<TicketSubInfo> response = new Response<>();
-        TicketSubInfo subInfo = ticketService.getTicketSubInfo();
-        response.setData(subInfo);
-
+    @DeleteMapping(value = "{id}")
+    public ResponseEntity<Response<String>> deleteById(@PathVariable("id") long id) {
+        log.debug("■削除するチケットID：" + id);
+        Response<String> response = new Response<>();
+        ticketService.delete(id);
+        // TODO 検証用の処理なのでレコード物理削除しているが、
+        //       本来はidをキーにしてレコードの有効フラグカラムの値をfalseに
+        //       変えて論理削除するなど考えられる。
+        response.setData("削除成功");
         return ResponseEntity.ok(response);
     }
 

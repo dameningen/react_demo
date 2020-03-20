@@ -1,49 +1,58 @@
-import { FAIL_ACCOUNT_DETAIL_API, FAIL_ACCOUNT_UPDATE_API, FETCH_ACCOUNT_DETAIL, SUCCESS_ACCOUNT_DETAIL_API, SUCCESS_ACCOUNT_UPDATE_API, UPDATE_ACCOUNT_DETAIL } from '../actions/accountDetailActions';
+import { FAIL_ACCOUNT_UPDATE, FAIL_GET_ACCOUNT_DETAIL, GET_ACCOUNT_DETAIL, SUCCESS_ACCOUNT_UPDATE, SUCCESS_GET_ACCOUNT_DETAIL, UPDATE_ACCOUNT } from '../actions/accountDetailActions';
 
 const initialState = {
-    type: '',
-    items: [],
+    items: [], // 取得したアカウント詳細情報
+    updateValues: {}, // 登録または更新するアカウント情報
+    errMsg: null,
     isLoading: false
 }
 
+/**
+ * アカウント詳細情報Reducer。
+ * @param {*} state 
+ * @param {*} action 
+ */
 const accountDetailState = (state = initialState, action) => {
     switch (action.type) {
-        case FETCH_ACCOUNT_DETAIL:
-            state.type = action.type;
-            state.items = action.items;
-            state.isLoading = action.isLoading;
-            return Object.assign({}, state);
-        case SUCCESS_ACCOUNT_DETAIL_API:
-            state.type = action.type;
-            state.items = action.items;
-            state.isLoading = action.isLoading;
-            return Object.assign({}, state);
-        case FAIL_ACCOUNT_DETAIL_API:
-            state.type = action.type;
-            state.items = action.items;
-            state.isLoading = action.isLoading;
-            return Object.assign({}, state);
-        // 更新
-        case UPDATE_ACCOUNT_DETAIL:
-            state.type = action.type;
-            state.updateValues = action.updateValues;
-            state.isLoading = action.isLoading;
-            return Object.assign({}, state);
-        case SUCCESS_ACCOUNT_UPDATE_API:
-            state.type = action.type;
-            state.updateValues = action.updateValues;
-            state.items = action.updateValues;
-            state.isLoading = action.isLoading;
-            return Object.assign({}, state);
-        case FAIL_ACCOUNT_UPDATE_API:
-            state.type = action.type;
-            state.updateValues = action.updateValues;
-            state.items = action.updateValues;
-            state.isLoading = action.isLoading;
-            return Object.assign({}, state);
+        // アカウント情報取得
+        case GET_ACCOUNT_DETAIL:
+            return Object.assign({}, state, {
+                isLoading: action.isLoading,
+            });
+
+        case SUCCESS_GET_ACCOUNT_DETAIL:
+            return Object.assign({}, state, {
+                items: action.items,
+                errMsg: null,
+                isLoading: action.isLoading,
+            });
+
+        case FAIL_GET_ACCOUNT_DETAIL:
+            return Object.assign({}, state, {
+                errMsg: action.errMsg,
+                isLoading: action.isLoading,
+            });
+
+        // アカウント更新
+        case UPDATE_ACCOUNT:
+            return Object.assign({}, state, {
+                updateValues: action.updateValues,
+                isLoading: action.isLoading,
+            });
+        case SUCCESS_ACCOUNT_UPDATE:
+            return Object.assign({}, state, {
+                updateValues: {},
+                errMsg: null,
+                isLoading: action.isLoading,
+            });
+        case FAIL_ACCOUNT_UPDATE:
+            return Object.assign({}, state, {
+                updateValues: {},
+                errMsg: action.errMsg,
+                isLoading: action.isLoading,
+            });
 
         default:
-            state.isLoading = false;
             return state;
     }
 }

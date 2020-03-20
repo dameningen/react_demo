@@ -1,11 +1,11 @@
 // チケット情報を取得するアクション
-export const FETCH_TICKET_LIST = 'FETCH_TICKET_LIST'
-export const SUCCESS_TICKET_LIST_API = 'SUCCESS_TICKET_LIST_API'
-export const FAIL_TICKET_LIST_API = 'FAIL_TICKET_LIST_API'
+export const GET_TICKET_LIST = 'GET_TICKET_LIST'
+export const SUCCESS_GET_TICKET_LIST = 'SUCCESS_GET_TICKET_LIST'
+export const FAIL_GET_TICKET_LIST = 'FAIL_GET_TICKET_LIST'
 
-export const fetchTicketList = () => {
+export const getTicketList = () => {
     return {
-        type: FETCH_TICKET_LIST,
+        type: GET_TICKET_LIST,
         items: [],
         isLoading: true
     }

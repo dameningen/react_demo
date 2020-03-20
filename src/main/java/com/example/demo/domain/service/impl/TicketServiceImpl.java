@@ -6,6 +6,8 @@ package com.example.demo.domain.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -53,8 +55,18 @@ public class TicketServiceImpl implements TicketService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional
     public Ticket createOrUpdate(Ticket ticket) {
         return this.ticketRepository.save(ticket);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional
+    public void delete(long id) {
+        ticketRepository.deleteById(id);
     }
 
     /**
@@ -82,10 +94,12 @@ public class TicketServiceImpl implements TicketService {
     public TicketSubInfo getTicketSubInfo() {
         TicketSubInfo ticketSubInfo = new TicketSubInfo();
 
+        // チケット分類、ステータス、優先度をそれぞれ取得する
         List<TicketCategory> ticketCategories = this.categoryRepository.findAllByOrderByCode();
         List<TicketStatus> ticketStatuses = this.statusRepository.findAllByOrderByCode();
         List<TicketPriority> ticketPriorities = this.priorityRepository.findAllByOrderByCode();
 
+        // 取得した情報を返却用のオブジェクトに設定する
         ticketSubInfo.setTicketCategories(ticketCategories);
         ticketSubInfo.setTicketStatuses(ticketStatuses);
         ticketSubInfo.setTicketPriorities(ticketPriorities);

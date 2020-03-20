@@ -3,14 +3,14 @@ import MUIDataTable from "mui-datatables";
 import React, { Component } from "react";
 import LoadingOverlay from 'react-loading-overlay';
 import { connect } from 'react-redux';
-import { fetchAccountList } from '../../actions/accountListActions';
+import { getAccountList } from '../../actions/accountListActions';
 import PageTitle from "../../components/PageTitle/PageTitle";
 import { convDateTIme } from "../../libs/common/dateUtil";
 
 class AccountList extends Component {
 
   componentDidMount() {
-    this.props.dispatch(fetchAccountList());
+    this.props.dispatch(getAccountList());
   }
 
   /**
@@ -23,30 +23,9 @@ class AccountList extends Component {
   }
 
   columns = [
-    {
-      name: "id",
-      label: "ID",
-      options: {
-        filter: true,
-        sort: true,
-      }
-    },
-    {
-      name: "username",
-      label: "アカウント名",
-      options: {
-        filter: true,
-        sort: false,
-      }
-    },
-    {
-      name: "mailAddress",
-      label: "メールアドレス",
-      options: {
-        filter: true,
-        sort: false,
-      }
-    },
+    { name: "id", label: "ID", },
+    { name: "username", label: "アカウント名", },
+    { name: "mailAddress", label: "メールアドレス", },
     {
       name: "roles",
       label: "権限",
@@ -74,8 +53,6 @@ class AccountList extends Component {
       name: "createdAt",
       label: "登録日",
       options: {
-        filter: true,
-        sort: false,
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
             <>
@@ -89,8 +66,6 @@ class AccountList extends Component {
       name: "updatedAt",
       label: "更新日",
       options: {
-        filter: true,
-        sort: false,
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
             <>
@@ -128,12 +103,7 @@ class AccountList extends Component {
           <MUIDataTable
             title="アカウント一覧"
             data={this.props.response.accountListState.items}
-            columns={this.columns}
-            options={
-              {
-                filterType: "checkbox",
-              }
-            } />
+            columns={this.columns} />
         </LoadingOverlay>
       </div>
     );

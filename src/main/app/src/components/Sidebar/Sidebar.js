@@ -1,5 +1,5 @@
 import { Drawer, IconButton, List } from "@material-ui/core";
-import { AccountBox as AccountBoxIcon, ArrowBack as ArrowBackIcon, FilterNone as UIElementsIcon, Home as HomeIcon, Report as ReportIcon } from "@material-ui/icons";
+import { AccountBox as AccountBoxIcon, ArrowBack as ArrowBackIcon, Home as HomeIcon, Report as ReportIcon } from "@material-ui/icons";
 import { useTheme } from "@material-ui/styles";
 import classNames from "classnames";
 import React, { useEffect, useState } from "react";
@@ -32,18 +32,6 @@ const structure = [
       { label: "アカウント一覧", link: "/app/accountList" },
     ],
   },
-  {
-    id: 3,
-    label: "UI Elements",
-    link: "/app/ui",
-    icon: <UIElementsIcon />,
-    children: [
-      { label: "Icons", link: "/app/ui/icons" },
-      { label: "Charts", link: "/app/ui/charts" },
-      { label: "Maps", link: "/app/ui/maps" },
-    ],
-  },
-  { id: 4, type: "divider" },
 ];
 
 function Sidebar({ location }) {

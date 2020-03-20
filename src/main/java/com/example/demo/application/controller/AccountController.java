@@ -30,6 +30,7 @@ import com.example.demo.domain.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * アカウント情報操作処理を提供するRestController。
  * @author dameningen
  *
  */
@@ -39,16 +40,23 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AccountController extends AbstractController {
 
+    /**
+     * アカウント情報操作サービス
+     */
     @Autowired
     private AccountService accountService;
+
+    /**
+     * パスワードエンコーダー
+     */
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     /**
      * アカウントの一覧を取得する。
      * TODO：チケット更新画面のプルダウン生成時にも使用する為、一般ユーザでも呼べるようにしているが、
-     * 　　　アカウント管理用の一覧取得とプルダウン生成用の一覧取得処理は分けた方が良い。
-     * 　　　（プルダウン生成用のリストにはidと名前だけ返却する）
+     *        アカウント管理用の一覧取得とプルダウン生成用の一覧取得処理は分けた方が良い。
+     *       （プルダウン生成用のリストにはidと名前だけ返却する）
      * @return アカウント一覧
      */
     @GetMapping(value = "")
@@ -58,6 +66,7 @@ public class AccountController extends AbstractController {
         List<Account> accounts = accountService.getAccountList();
         log.debug("■取得したアカウント：" + accounts);
         response.setData(accounts);
+
         return ResponseEntity.ok(response);
     }
 
@@ -67,6 +76,7 @@ public class AccountController extends AbstractController {
      * @param count ページあたりの件数
      * @return アカウント一覧
      */
+    // TODO 今回特に使用しない
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "{page}/{count}")
     public ResponseEntity<Response<Page<Account>>> getAccountList(@PathVariable int page, @PathVariable int count) {
@@ -119,7 +129,7 @@ public class AccountController extends AbstractController {
      * @return 新規作成したアカウント情報
      */
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("{id}")
+    @PostMapping("")
     public ResponseEntity<Response<Account>> create(@RequestBody Account account) {
         log.debug("■新規作成するアカウント情報：" + account);
         return createOrUpdate(account);
@@ -148,6 +158,9 @@ public class AccountController extends AbstractController {
         log.debug("■削除するアカウントID：" + id);
         Response<String> response = new Response<>();
         accountService.delete(id);
+        // TODO 検証用の処理なのでレコード物理削除しているが、
+        //       本来はidをキーにしてレコードのenableカラムの値をfalseに
+        //       変えて論理削除するなど考えられる。
         response.setData("削除成功");
         return ResponseEntity.ok(response);
     }

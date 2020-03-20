@@ -1,30 +1,29 @@
-import { FETCH_TICKET_LIST, SUCCESS_TICKET_LIST_API, FAIL_TICKET_LIST_API } from '../actions/ticketListActions';
+import { FAIL_GET_TICKET_LIST, GET_TICKET_LIST, SUCCESS_GET_TICKET_LIST } from '../actions/ticketListActions';
 
 const initialState = {
-    type: '',
     items: [],
+    errMsg: null,
     isLoading: false
 }
 
 const ticketListState = (state = initialState, action) => {
     switch (action.type) {
-        case FETCH_TICKET_LIST:
-            state.type = action.type;
-            state.items = action.items;
-            state.isLoading = action.isLoading;
-            return Object.assign({}, state);
-        case SUCCESS_TICKET_LIST_API:
-            state.type = action.type;
-            state.items = action.items;
-            state.isLoading = action.isLoading;
-            return Object.assign({}, state);
-        case FAIL_TICKET_LIST_API:
-            state.type = action.type;
-            state.items = action.items;
-            state.isLoading = action.isLoading;
-            return Object.assign({}, state);
+        case GET_TICKET_LIST:
+            return Object.assign({}, state, {
+                isLoading: action.isLoading,
+            });
+
+        case SUCCESS_GET_TICKET_LIST:
+            return Object.assign({}, state, {
+                items: action.items,
+                isLoading: action.isLoading,
+            });
+        case FAIL_GET_TICKET_LIST:
+            return Object.assign({}, state, {
+                items: action.items,
+                isLoading: action.isLoading,
+            });
         default:
-            state.isLoading = false;
             return state;
     }
 }

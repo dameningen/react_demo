@@ -1,7 +1,7 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import React, { Component } from "react";
 import { connect } from 'react-redux';
-import { fetchTicketSubInfo } from '../../actions/ticketSubInfoActions';
+import { getTicketSubInfo } from '../../actions/ticketSubInfoActions';
 
 class SelectComponent extends Component {
     constructor(props) {
@@ -13,7 +13,7 @@ class SelectComponent extends Component {
 
     componentDidMount() {
         // チケットサブ情報を取得する
-        this.props.dispatch(fetchTicketSubInfo());
+        this.props.dispatch(getTicketSubInfo());
     }
 
     render() {
@@ -28,7 +28,7 @@ class SelectComponent extends Component {
                                 this.props.subInfo.ticketStatuses.map((d, idx) =>
                                     <MenuItem key={idx} value={d.code}>{d.name}</MenuItem>
                                 )
-                                : <MenuItem value={0}>null</MenuItem>
+                                : <MenuItem key={99} value={99}></MenuItem>
                         }
                     </Select>
                 </FormControl>

@@ -122,11 +122,18 @@ export default {
         borderBottom: "1px solid rgba(224, 224, 224, .5)",
       },
       head: {
-        fontSize: "0.95rem",
+        fontSize: "0.75rem",
       },
       body: {
-        fontSize: "0.95rem",
+        fontSize: "0.75rem",
       },
+    },
+    MUIDataTableBodyRow: {
+      root: {
+        '&:nth-child(even)': {
+          backgroundColor: '#f0f8ff'
+        }
+      }
     },
   },
 };

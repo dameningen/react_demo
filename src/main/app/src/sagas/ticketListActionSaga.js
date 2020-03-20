@@ -1,5 +1,5 @@
 import { call, put } from 'redux-saga/effects';
-import { FAIL_TICKET_LIST_API, SUCCESS_TICKET_LIST_API } from '../actions/ticketListActions';
+import { FAIL_GET_TICKET_LIST, SUCCESS_GET_TICKET_LIST } from '../actions/ticketListActions';
 import { callGetTicketList } from '../libs/api/apiCall';
 
 export function* ticketListSaga() {
@@ -7,10 +7,10 @@ export function* ticketListSaga() {
     if (data) {
         // API成功時
         // TODO：itemsに設定するデータは要再考
-        yield put({ type: SUCCESS_TICKET_LIST_API, items: data.data, isLoading: false });
+        yield put({ type: SUCCESS_GET_TICKET_LIST, items: data.data, isLoading: false });
     } else {
         console.log("ticketListSaga error:" + error.message);
         // API失敗時は空の配列を返却する
-        yield put({ type: FAIL_TICKET_LIST_API, items: [], isLoading: false });
+        yield put({ type: FAIL_GET_TICKET_LIST, items: [], isLoading: false });
     }
 }
