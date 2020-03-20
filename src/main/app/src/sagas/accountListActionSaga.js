@@ -1,19 +1,10 @@
 import { call, put } from 'redux-saga/effects';
 import { FAIL_ACCOUNT_LIST_API, SUCCESS_ACCOUNT_LIST_API } from '../actions/accountListActions';
-import { apiCallGet } from '../libs/common/apiCall';
-
-/**
- * アカウント一覧取得APIをコールする処理。
- */
-const getAccountList = async () => {
-    const url = "/api/account/list";
-    const { data, error } = await apiCallGet(url);
-    return { data, error };
-}
+import { callGetAccountList } from '../libs/api/apiCall';
 
 export function* accountListSaga() {
     // TODO 記法要確認
-    const { data, error } = yield call(getAccountList);
+    const { data, error } = yield call(callGetAccountList);
     if (data) {
         // API成功時
         // TODO：itemsに設定するデータは要再考

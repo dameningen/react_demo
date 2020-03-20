@@ -29,18 +29,16 @@ public interface AccountService extends UserDetailsService {
     Optional<Account> findById(long id);
 
     /**
-     * アカウント一覧を{@link Page}オブジェクトとして取得する。
-     * @param page
-     * @param count
-     * @return
+     * アカウント一覧（{@link List}）を取得する。
+     * @return アカウント一覧
      */
     List<Account> getAccountList();
 
     /**
      * アカウント一覧を{@link Page}オブジェクトとして取得する。
-     * @param page
-     * @param count
-     * @return
+     * @param page 取得対象ページ（0開始）
+     * @param count 取得件数
+     * @return アカウント一覧
      */
     Page<Account> getAccountList(int page, int count);
 
@@ -51,6 +49,13 @@ public interface AccountService extends UserDetailsService {
      */
     @Transactional
     Account createOrUpdate(Account account);
+
+    /**
+     * アカウント情報を削除する。
+     * @param id 削除対象アカウントID
+     */
+    @Transactional
+    void delete(long id);
 
     /**
      * 管理者権限ユーザを登録する。

@@ -8,8 +8,6 @@ import axiosCookieJarSupport from 'axios-cookiejar-support';
  *       baseUrlをdocument.location.hostでポートまで取れば良いのでこの定義は不要
  */
 const HOST_PORT_NUM = '8080';
-const COOKIE_KEY_XSRF_TOKEN = 'XSRF-TOKEN';
-const HEDER_KEY_XSRF_TOKEN = 'X-XSRF-TOKEN';
 
 axios.defaults.withCredentials = true;
 const restClient = axios.create(
@@ -18,6 +16,11 @@ const restClient = axios.create(
         baseURL: 'http://' + document.location.hostname + ':' + HOST_PORT_NUM,
     }
 );
+
+// Cookieに登録されているXSRFトークンのキー
+const COOKIE_KEY_XSRF_TOKEN = 'XSRF-TOKEN';
+// リクエスト実行時にリクエストヘッダに乗せるXSRFトークンのキー
+const HEDER_KEY_XSRF_TOKEN = 'X-XSRF-TOKEN';
 
 /**
  * Cookieから任意の値を取得し返却する。
@@ -42,6 +45,7 @@ const getCookie = (cname) => {
 /**
  * リクエストヘッダにCookieから取得したXSRF-TOKENを設定する
  */
+// TODO axiosは自動でX-XSRF-TOKENをリクエストヘッダに乗せてくれるからいらない
 const requstHeaderSetting = () => {
     axiosCookieJarSupport(restClient);
     let xsrfToken = getCookie(COOKIE_KEY_XSRF_TOKEN);
@@ -68,16 +72,15 @@ export const loginClient = async (endPointPath, params = {}) => {
 }
 
 /**
- * ヘッダにCookieから取得したXSRF-TOKENを
- * 乗せてGETでAPIを実行する。
+ * GETリクエストを実行する。
  * @param {*} endPoint エンドポイント
  * @param {*} params API実行パラメータ
  */
-export const apiCallGet = (endPoint, params) => {
-    console.log('■apiCallGet:' + endPoint);
+export const restGet = (endPoint, params) => {
+    console.log('■restGet:' + endPoint);
 
     // リクエストヘッダ設定
-    requstHeaderSetting();
+    // requstHeaderSetting();
 
     return restClient.get(
         endPoint,
@@ -85,8 +88,8 @@ export const apiCallGet = (endPoint, params) => {
         { withCredentials: true, }
     )
         .then((response) => {
-            console.log('apiCallGet ステータスコード:' + response.status + ':' + response.statusText);
-            console.log('apiCallGet レスポンス' + JSON.stringify(response.data));
+            console.log('apiCarestGetllGet レスポンス');
+            console.dir(response.data);
             return response;
         })
         .catch((error) => {
@@ -96,15 +99,15 @@ export const apiCallGet = (endPoint, params) => {
 }
 
 /**
- * 
+ * POSTリクエストを実行する。
  * @param {*} endPoint エンドポイント
  * @param {*} params API実行パラメータ
  */
-export const apiCallPost = (endPoint, params = {}) => {
-    console.log('■apiCallPost:' + endPoint);
+export const restPost = (endPoint, params = {}) => {
+    console.log('■restPost:' + endPoint);
 
     // リクエストヘッダ設定
-    requstHeaderSetting();
+    // requstHeaderSetting();
 
     return restClient.post(
         endPoint,
@@ -112,9 +115,8 @@ export const apiCallPost = (endPoint, params = {}) => {
         { withCredentials: true, }
     )
         .then((response) => {
-            // const config = response.config;
-            console.log("apiCallPost ステータスコード" + response.status);
-            console.log("apiCallPost レスポンス" + JSON.stringify(response.data));
+            console.log("restPost レスポンス");
+            console.dir(response.data);
             return response;
         })
         .catch((error) => {
@@ -122,3 +124,52 @@ export const apiCallPost = (endPoint, params = {}) => {
             return { error };
         });
 }
+
+/**
+ * PUTリクエストを実行する。
+ * @param {*} endPoint エンドポイント
+ * @param {*} params API実行パラメータ
+ */
+export const restPut = (endPoint, params = {}) => {
+    console.log('■restPut:' + endPoint);
+
+    return restClient.put(
+        endPoint,
+        params,
+        { withCredentials: true, }
+    )
+        .then((response) => {
+            console.log("restPost レスポンス");
+            console.dir(response.data);
+            return response;
+        })
+        .catch((error) => {
+            console.error(error.stack || error);
+            return { error };
+        });
+}
+
+/**
+ * DELETEリクエストを実行する。
+ * @param {*} endPoint エンドポイント
+ * @param {*} params API実行パラメータ
+ */
+export const restDelete = (endPoint, params = {}) => {
+    console.log('■restDelete:' + endPoint);
+
+    return restClient.delete(
+        endPoint,
+        params,
+        { withCredentials: true, }
+    )
+        .then((response) => {
+            console.log("restDelete レスポンス");
+            console.dir(response.data);
+            return response;
+        })
+        .catch((error) => {
+            console.error(error.stack || error);
+            return { error };
+        });
+}
+

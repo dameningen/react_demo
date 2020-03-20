@@ -5,13 +5,12 @@ import LoadingOverlay from 'react-loading-overlay';
 import { connect } from 'react-redux';
 import { fetchSbRandom } from '../../actions/springBootRandomActions';
 import PageTitle from "../../components/PageTitle/PageTitle";
-import { apiCallGet, apiCallPost } from '../../libs/common/apiCall';
+import { restGet, restPost } from '../../libs/common/restClient';
 // import { getSbRandom } from '../../moducks/sbRandomSearch';
 
 
 const AUTH_ENDPOINT = 'http://localhost:8080/api/auth';
 const GET_ACCOUNT_INFO_ENDPOINT = 'http://localhost:8080/api/account/getCurrentAccountInfo';
-const IS_ADMIN_ENDPOINT = 'http://localhost:8080/api/account/isAdminUser';
 const USESR_CREATE_ENDPOINT = 'http://localhost:8080/api/user/create';
 const TICKET_CREATE_ENDPOINT = 'http://localhost:8080/api/ticket/create';
 
@@ -61,7 +60,7 @@ class DashBoard extends Component {
       mailAddress: 'admin@localhost',
       password: 'secret'
     }
-    apiCallPost(AUTH_ENDPOINT, params);
+    restPost(AUTH_ENDPOINT, params);
   }
 
   handleGetList() {
@@ -75,16 +74,13 @@ class DashBoard extends Component {
       password: "pass",
       roles: "ROLE_CUSTOMER"
     }
-    apiCallPost(USESR_CREATE_ENDPOINT, params);
+    restPost(USESR_CREATE_ENDPOINT, params);
   }
 
   handleGetUser() {
-    apiCallGet(GET_ACCOUNT_INFO_ENDPOINT);
+    restGet(GET_ACCOUNT_INFO_ENDPOINT);
   }
 
-  handleIsAdmin() {
-    apiCallGet(IS_ADMIN_ENDPOINT);
-  }
 
   handleCreateTicket() {
     let params = {
@@ -93,20 +89,20 @@ class DashBoard extends Component {
       category: { code: 2 },
       description: "新規チケットの説明何かをいっぱい書いたりする。",
     }
-    apiCallPost(TICKET_CREATE_ENDPOINT, params);
+    restPost(TICKET_CREATE_ENDPOINT, params);
 
   }
 
   handleGetTicketList() {
-    apiCallGet(TICKET_LIST_ENDPOINT);
+    restGet(TICKET_LIST_ENDPOINT);
   }
 
   handleGetAccountList() {
-    apiCallGet(ACCOUNT_LIST_ENDPOINT);
+    restGet(ACCOUNT_LIST_ENDPOINT);
   }
 
   handleGetAccountInfo() {
-    apiCallGet(ACCOUNT_ID_ENDPOINT);
+    restGet(ACCOUNT_ID_ENDPOINT);
   }
 
   render() {
@@ -145,9 +141,6 @@ class DashBoard extends Component {
           />
           <Button variant="contained" onClick={() => this.handleGetUser()}>
             アカウント情報取得
-          </Button>
-          <Button variant="contained" color="primary" onClick={() => this.handleIsAdmin()}>
-            ユーザー権限判定
           </Button>
           <Button variant="contained" color="primary" onClick={() => this.handleCreateTicket()}>
             チケット新規登録

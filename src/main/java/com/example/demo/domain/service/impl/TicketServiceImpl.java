@@ -93,4 +93,13 @@ public class TicketServiceImpl implements TicketService {
         return ticketSubInfo;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Ticket> getTicketList() {
+        List<Ticket> ticketList = ticketRepository.findAllByOrderById();
+        return ticketList;
+    }
+
 }

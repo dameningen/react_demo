@@ -51,9 +51,17 @@ public class AccountServiceImpl implements AccountService {
      * {@inheritDoc}
      */
     @Override
+    public List<Account> getAccountList() {
+        List<Account> accountList = repository.findByEnabledTrueOrderById();
+        return accountList;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     @Transactional
     public Page<Account> getAccountList(int page, int count) {
-        // TODO 自動生成されたメソッド・スタブ
         Pageable pages = PageRequest.of(page, count);
         return this.repository.findAll(pages);
     }
@@ -71,18 +79,24 @@ public class AccountServiceImpl implements AccountService {
      * {@inheritDoc}
      */
     @Override
+    public void delete(long id) {
+        this.repository.deleteById(id);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public UserDetails loadUserByUsername(String mailAddress) throws UsernameNotFoundException {
         if (StringUtils.isEmpty(mailAddress)) {
             log.warn("■mailAddressが空");
             throw new UsernameNotFoundException("mailAddress is empty");
         }
-
         Account user = repository.findByMailAddress(mailAddress);
         if (user == null) {
             log.warn("■該当User無し（mailAddress）：" + mailAddress);
             throw new UsernameNotFoundException("User not found: " + mailAddress);
         }
-
         return user;
     }
 
@@ -122,16 +136,6 @@ public class AccountServiceImpl implements AccountService {
     public void registerUser(String username, String password, String mailAddress) {
         Account user = new Account(username, passwordEncoder.encode(password), mailAddress);
         repository.save(user);
-    }
-
-    /**
-     *
-     */
-    @Override
-    public List<Account> getAccountList() {
-        List<Account> accountList = repository.findByEnabledTrueOrderById();
-
-        return accountList;
     }
 
 }

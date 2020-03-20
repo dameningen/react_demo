@@ -1,29 +1,10 @@
 import { call, put } from 'redux-saga/effects';
 import { FAIL_ACCOUNT_DETAIL_API, FAIL_ACCOUNT_UPDATE_API, SUCCESS_ACCOUNT_DETAIL_API, SUCCESS_ACCOUNT_UPDATE_API } from '../actions/accountDetailActions';
-import { apiCallGet, apiCallPost } from '../libs/common/apiCall';
-
-/**
- * チケット一覧（0～10件目）取得APIをコールする処理。
- */
-const requestTicketDetailApi = async (accountId) => {
-    const url = '/api/account/' + accountId;
-    const { data, error } = await apiCallGet(url);
-    return { data, error };
-}
-
-/**
- * チケット情報更新APIをコールする処理。
- */
-const requestTicketUpdatelApi = async (values) => {
-    const url = '/api/account/update';
-    const { data, error } = await apiCallPost(url, values);
-    return { data, error };
-}
-
+import { callGetAccountInfo, callUpdateAccountInfo } from '../libs/api/apiCall';
 
 export function* accountDetailSaga({ accountId }) {
     console.log("★accountDetailSaga accountId:" + accountId);
-    const { data, error } = yield call(requestTicketDetailApi, accountId);
+    const { data, error } = yield call(callGetAccountInfo, accountId);
     if (data) {
         // API成功時
         // TODO：itemsに設定するデータは要再考
@@ -37,7 +18,7 @@ export function* accountDetailSaga({ accountId }) {
 
 export function* accountUpdateSaga({ updateValues }) {
     console.log("accountUpdateSaga updateValues:" + JSON.stringify(updateValues));
-    const { data, error } = yield call(requestTicketUpdatelApi, updateValues);
+    const { data, error } = yield call(callUpdateAccountInfo, updateValues);
     if (data) {
         // API成功時
         // TODO：itemsに設定するデータは要再考

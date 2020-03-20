@@ -1,17 +1,9 @@
 import { call, put } from 'redux-saga/effects';
 import { FAIL_SBRANDOM_API, SUCCESS_SBRANDOM_API } from '../actions/springBootRandomActions';
-import { apiCallGet } from '../libs/common/apiCall';
-
-/**
- * SpringBootの試験用APIをコールする処理。
- */
-const requestSbRandomApi = () => {
-    const url = "/api/sbRandom";
-    return apiCallGet(url);
-}
+import { callSbRandom } from '../libs/api/apiCall';
 
 export function* fetchSbRandomSaga() {
-    const { data, error } = yield call(requestSbRandomApi);
+    const { data, error } = yield call(callSbRandom);
     if (data) {
         // API成功時
         yield put({ type: SUCCESS_SBRANDOM_API, items: data, isLoading: false });

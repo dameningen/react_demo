@@ -1,23 +1,13 @@
 import { call, put } from 'redux-saga/effects';
 import { FAIL_TICKET_SUBINFO, SUCCESS_TICKET_SUBINFO } from '../actions/ticketSubInfoActions';
-import { apiCallGet } from '../libs/common/apiCall';
-
-
-/**
- * チケットサブ情報取得APIをコールする処理。
- */
-const requestTicketSubInfoApi = async () => {
-    const url = '/api/ticket/subInfo';
-    const { data, error } = await apiCallGet(url);
-    return { data, error };
-}
+import { callGetTicketSubInfo } from '../libs/api/apiCall';
 
 /**
  * チケットのサブ情報を取得する。
  */
 export function* ticketSubInfoSaga() {
     console.log("ticketSubInfoSaga");
-    const { data, error } = yield call(requestTicketSubInfoApi);
+    const { data, error } = yield call(callGetTicketSubInfo);
     if (data) {
         // API成功時
         // TODO：itemsに設定するデータは要再考

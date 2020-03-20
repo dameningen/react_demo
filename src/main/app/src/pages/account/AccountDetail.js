@@ -45,20 +45,11 @@ class AccountDetail extends Component {
     }
 
     onSubmit = async values => {
-        // TODO 一旦権限を無視
-        // delete values.authorities;
-        //values.authorities = ['ROLE_ADMIN', 'ROLE_USER'];
-        //values.authorities = [1, 2];
-
         const { params } = this.props.match;
         const accountId = params.id;
         values.id = accountId;
         // アカウント情報を更新する
         this.props.dispatch(updateAccountDetail(values));
-    };
-
-    handleChange = () => {
-        console.log('test');
     };
 
     render() {
@@ -130,7 +121,6 @@ class AccountDetail extends Component {
                                                                 component={Checkbox}
                                                                 type="checkbox"
                                                                 value="ROLE_ADMIN"
-                                                                onChange={this.handleChange()}
                                                             />
                                                         }
                                                     />

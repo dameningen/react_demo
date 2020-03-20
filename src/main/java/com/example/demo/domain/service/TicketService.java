@@ -3,6 +3,7 @@
  */
 package com.example.demo.domain.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -32,6 +33,12 @@ public interface TicketService {
      * @return 新規登録または更新後の情報が設定されたチケットインスタンス
      */
     Ticket createOrUpdate(Ticket ticket);
+
+    /**
+     * チケット一覧（{@link List}）を取得する。
+     * @return チケット一覧
+     */
+    List<Ticket> getTicketList();
 
     /**
      * ページ番号と要素数を指定してチケットテーブルから情報を取得する。

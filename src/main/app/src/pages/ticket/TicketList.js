@@ -224,10 +224,9 @@ class TicketList extends Component {
                 <div style={{ padding: 16, margin: 'auto', }}>
                     <CssBaseline />
                     <LoadingOverlay
-                        active={this.props.val.isLoading}
+                        active={this.props.isLoading}
                         spinner
-                        text='Loading ...'
-                    >
+                        text='Loading ...'>
                         <MUIDataTable
                             title="チケット一覧"
                             data={this.props.val}
@@ -245,7 +244,10 @@ class TicketList extends Component {
 }
 
 const mapStateToProps = (state) => {
-    return { val: state.ticketListState.items };
+    return {
+        val: state.ticketListState.items,
+        isLoading: state.ticketListState.isLoading,
+    };
 };
 
 export default connect(mapStateToProps)(TicketList);

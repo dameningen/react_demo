@@ -4,20 +4,19 @@
 package com.example.demo.application.controller;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  */
 @RestController
-@RequestMapping("api/ticket")
+@RequestMapping("api/tickets")
 @Slf4j
 public class TicketController extends AbstractController {
 
@@ -46,66 +45,28 @@ public class TicketController extends AbstractController {
     private TicketService ticketService;
 
     /**
-     * チケットを新規登録する。
-     * @param request
-     * @param user
-     * @param result
+     * ページ番号と1ページ辺りの要素数を指定してチケットの一覧を取得する。
+     * @param principal
+     * @param page
+     * @param count
      * @return
      */
-    @PostMapping("/create")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<Response<Ticket>> create(Principal principal, Model model, @RequestBody Ticket ticket,
-            BindingResult result) {
+    @GetMapping(value = "")
+    public ResponseEntity<Response<List<Ticket>>> findAll() {
+        log.debug("■チケット一覧取得リクエスト");
 
-        Response<Ticket> response = new Response<Ticket>();
-        try {
-            if (result.hasErrors()) {
-                result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
-                log.error("エラー発生：" + result);
-                return ResponseEntity.badRequest().body(response);
-            }
+        Response<List<Ticket>> response = new Response<>();
+        List<Ticket> ticketList = ticketService.getTicketList();
+        log.debug("■取得したチケット：" + ticketList);
+        response.setData(ticketList);
 
-            // リクエストに設定された情報に新規登録用の情報を付与する
-            ticket.setStatus(new TicketStatus(TicketStatusEnum.New));
-            Account account = getUser(principal);
-            ticket.setAuthor(account);
-            ticket.setUpdater(account);
-
-            // チケット情報を新規登録する
-            Ticket insertedTicket = ticketService.createOrUpdate(ticket);
-            log.info("チケットを新規登録。" + insertedTicket);
-            response.setData(insertedTicket);
-
-        } catch (Exception e) {
-            log.error("想定外の例外が発生。", e);
-            response.getErrors().add(e.getMessage());
-            return ResponseEntity.badRequest().body(response);
-        }
-        return ResponseEntity.ok(response);
-
-    }
-
-    @PostMapping("/update")
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
-    public ResponseEntity<Response<Ticket>> update(HttpServletRequest request, @RequestBody Ticket ticket,
-            BindingResult result) {
-        Response<Ticket> response = new Response<Ticket>();
-        try {
-            log.debug("★更新するチケット情報：" + ticket);
-            Ticket ticketPersisted = ticketService.createOrUpdate(ticket);
-            response.setData(ticketPersisted);
-
-        } catch (Exception e) {
-            log.error("想定外の例外が発生。", e);
-            response.getErrors().add(e.getMessage());
-            return ResponseEntity.badRequest().body(response);
-        }
         return ResponseEntity.ok(response);
     }
 
     /**
-     * @param id
-     * @return
+     * チケット情報を取得する。
+     * @param id チケットID
+     * @return チケット情報
      */
     @GetMapping(value = "{id}")
     public ResponseEntity<Response<Ticket>> findById(@PathVariable("id") long id) {
@@ -117,24 +78,24 @@ public class TicketController extends AbstractController {
             return ResponseEntity.badRequest().body(response);
         }
         response.setData(ticket);
+
         return ResponseEntity.ok(response);
     }
 
     /**
      * ページ番号と1ページ辺りの要素数を指定してチケットの一覧を取得する。
      * @param principal
-     * @param model
      * @param page
      * @param count
      * @return
      */
     @GetMapping(value = "{page}/{count}")
-    public ResponseEntity<Response<Page<Ticket>>> findAll(Principal principal, Model model, @PathVariable int page,
+    public ResponseEntity<Response<Page<Ticket>>> findAll(Principal principal, @PathVariable int page,
             @PathVariable int count) {
 
         log.debug("チケット取得リクエスト page:" + page + " count:" + count);
 
-        Response<Page<Ticket>> response = new Response<Page<Ticket>>();
+        Response<Page<Ticket>> response = new Response<>();
         Page<Ticket> tickets = null;
         Account account = getUser(principal);
         if (account.isAdmin() || account.isManager()) {
@@ -153,12 +114,76 @@ public class TicketController extends AbstractController {
     }
 
     /**
+     * チケットを新規登録する。
+     * @param principal
+     * @param ticket
+     * @param result
      * @return
+     */
+    @PostMapping("{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public ResponseEntity<Response<Ticket>> create(Principal principal, @RequestBody Ticket ticket,
+            BindingResult result) {
+
+        Response<Ticket> response = new Response<>();
+        try {
+            if (result.hasErrors()) {
+                result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
+                log.error("■エラー発生：" + result);
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            // リクエストに設定された情報に新規登録用の情報を付与する
+            ticket.setStatus(new TicketStatus(TicketStatusEnum.New));
+            Account account = getUser(principal);
+            ticket.setAuthor(account);
+            ticket.setUpdater(account);
+
+            // チケット情報を新規登録する
+            Ticket insertedTicket = ticketService.createOrUpdate(ticket);
+            log.info("■チケット新規登録[" + insertedTicket + "]");
+            response.setData(insertedTicket);
+
+        } catch (Exception e) {
+            log.error("想定外の例外が発生。", e);
+            response.getErrors().add(e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+        return ResponseEntity.ok(response);
+
+    }
+
+    /**
+     * チケット情報を更新する
+     * @param ticket 更新するチケット情報
+     * @return
+     */
+    @PutMapping("{id}")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    public ResponseEntity<Response<Ticket>> update(@RequestBody Ticket ticket) {
+        Response<Ticket> response = new Response<>();
+        try {
+            log.debug("■更新するチケット情報[" + ticket + "]");
+            Ticket ticketPersisted = ticketService.createOrUpdate(ticket);
+            response.setData(ticketPersisted);
+
+        } catch (Exception e) {
+            log.error("想定外の例外が発生。", e);
+            response.getErrors().add(e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * チケットのサブ情報として、分類、優先度、ステータスのリストを返却する。
+     * @return チケットサブ情報（分類、優先度、ステータスのリスト）
      */
     @GetMapping(value = "/subInfo")
     public ResponseEntity<Response<TicketSubInfo>> findAllTicketSubInfo() {
 
-        Response<TicketSubInfo> response = new Response<TicketSubInfo>();
+        Response<TicketSubInfo> response = new Response<>();
         TicketSubInfo subInfo = ticketService.getTicketSubInfo();
         response.setData(subInfo);
 
